@@ -1,0 +1,15 @@
+@import "bootstrap/scss/bootstrap";
+
+.App{
+    display: flex;
+    height: 100vh;
+    color: rgba($color: #325068, $alpha: 1.0);
+    background-color: rgba($color: hsl(207, 35%, 90%), $alpha: 1.0);
+    .container{
+        margin-left: 14rem;
+        transition: all 0.3s;
+    }
+    .container.collapsed{
+        margin-left: 4rem;
+    }
+}
