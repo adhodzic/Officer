@@ -1,5 +1,5 @@
 const { AssetGroupModel } = require("../../models/AssetGroup.js");
-
+const {AssetModel} = require('../../models/Asset.js')
 exports.get = function () {
     return (req, res) => {
         const query = req.query;
@@ -44,5 +44,24 @@ exports.delete = function (){
 
         if(!docs) return res.status(400).json({message: `No Asset Group/s found`})
         return res.status(200).json(docs)
+    }
+}
+
+
+exports.cascadeDeleteInfo = function(){
+    return async (req, res) =>{
+        const _ids = req.body.data;
+        AssetGroupModel.find({_id: {$in: _ids}}, async(err, docs)=>{
+            if (docs === null) return res.status(401).json({Message:"Asset Group/s not found"});
+            if (err) return res.status(500).json({ err: err });
+            let newDocs = Promise.all(docs.map(async (row)=>{
+                let assets = await AssetModel.find({AssetGroup: row._id}, 'Name')
+                return {
+                    ...row._doc,
+                    assets
+                }
+            }))
+            return res.status(200).json(await newDocs)
+        });
     }
 }

@@ -3,10 +3,14 @@ import CoreTable from "../../../components/Core/Table/CoreTable";
 import "./AssetTable.scss";
 
 import assetApi from '../../../services/assetApi'
+import assetGroupApi from '../../../services/assetGroupApi'
 
 function AssetTable() {
   const [assets, setAssets] = useState([])
   const [loading, setLoading] = useState(true)
+  const getGroupOptions = async function () {
+
+  }
   const loadData = async function () {
     setLoading(true)
     const apiData = await assetApi.get();
@@ -26,6 +30,18 @@ function AssetTable() {
         Header: "Description",
         accessor: "Description",
       },
+      {
+        Header: "Label",
+        accessor: "Label",
+      },
+      {
+        Header: "Purchase Date",
+        accessor: "PurchaseDate",
+      },
+      {
+        Header: "Asset Group",
+        accessor: "AssetGroup"
+      }
     ],
     []
   );
@@ -37,11 +53,15 @@ function AssetTable() {
         ControlType: "Text"
     },
     PurchaseDate: {
-        ControlType: "Text"
+        ControlType: "Date"
     },
     Description: {
         ControlType: "Text"
-    }
+    },
+    AssetGroup: {
+      ControlType: "Select",
+      DataSource: assetGroupApi
+  }
 }
   return (
     <>

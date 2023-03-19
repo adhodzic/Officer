@@ -3,12 +3,14 @@ import { useTable, useRowSelect, usePagination } from "react-table";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import BTable from "react-bootstrap/Table";
+import { Button, Modal } from "react-bootstrap";
+import BTable from 'react-bootstrap/Table'
 import './CoreTable.scss'
 import PaginationCore from "./PaginationCore";
 import CoreTableTools from "./CoreTableTools";
 import CoreModal from "../Modal/CoreModal";
-function CoreTable({setData, data, columns, title, createFormConf, createFunc, apiService }) {
+
+function CoreTable({ setData, data, columns, title, createFormConf, createFunc, apiService }) {
     const IndeterminateCheckbox = forwardRef(
         ({ indeterminate, ...rest }, ref) => {
             const defaultRef = useRef();
@@ -81,9 +83,11 @@ function CoreTable({setData, data, columns, title, createFormConf, createFunc, a
         }
     );
     const [show, setShow] = useState(false);
+    const [showDeleteWarning, setShowDeleteWarning] = useState(false);
     const [isInEdit, setIsInEdit] = useState(false);
-    const handleClose = (dataChanged) =>{
-        typeof(dataChanged) == 'boolean' && dataChanged && setData([])
+    const [isDeleting, setIsDeleting] = useState(false);
+    const handleClose = (dataChanged) => {
+        typeof (dataChanged) == 'boolean' && dataChanged && setData([])
         setShow(false)
     };
 
@@ -91,13 +95,21 @@ function CoreTable({setData, data, columns, title, createFormConf, createFunc, a
         setIsInEdit(edit);
         setShow(true);
     };
+    const handleShowDeleteWarning = () => {
+        setShowDeleteWarning(true)
+    };
 
-    const removeData = async () =>{
-        debugger;
+    const handleCloseDeleteWarning = () =>{
+        setShowDeleteWarning(false)
+    }
+
+    const removeData = async () => {
+        setIsDeleting(true)
         let ids = selectedFlatRows.map((row) => {
             return row.original._id
         })
         await apiService.remove(ids)
+        setIsDeleting(false)
         setData([])
     }
     return (
@@ -106,7 +118,7 @@ function CoreTable({setData, data, columns, title, createFormConf, createFunc, a
             <div className="table-title">
                 <h3>{title}</h3>
             </div>
-            <CoreTableTools create={handleShow} remove={removeData}></CoreTableTools>
+            <CoreTableTools create={handleShow} remove={handleShowDeleteWarning}></CoreTableTools>
             <div className="table-wrap">
                 <BTable hover size="sm" {...getTableProps()}>
                     <thead>
@@ -121,7 +133,7 @@ function CoreTable({setData, data, columns, title, createFormConf, createFunc, a
                         ))}
                     </thead>
                     <tbody>
-                        {page.map((row, i) => {
+                        {page.length > 0 && page.map((row, i) => {
                             prepareRow(row);
                             return (
                                 <tr className={selectedRow.id == row.id ? 'selected-row' : ''}
@@ -138,12 +150,40 @@ function CoreTable({setData, data, columns, title, createFormConf, createFunc, a
                                         );
                                     })}
                                 </tr>
-                            );
-                        })}
+                            )
+                        }) || <tr><td colSpan="100%">No data</td></tr>}
                     </tbody>
                 </BTable>
             </div>
             <PaginationCore gotoPage={gotoPage} canNextPage={canNextPage} canPreviousPage={canPreviousPage} nextPage={nextPage} previousPage={previousPage} setPageSize={setPageSize} pageSize={pageSize} pageOptions={pageOptions} pageIndex={pageIndex} />
+            <Modal show={showDeleteWarning} onHide={handleCloseDeleteWarning} backdrop="static">
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        Remove {title}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                        {'You are about to remove ' + selectedFlatRows.length + ' ' + title}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        disabled={isDeleting}
+                        variant="secondary"
+                        onClick={handleCloseDeleteWarning}
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        form="group-form"
+                        type="button"
+                        variant="primary"
+                        disabled={isDeleting}
+                        onClick={()=> removeData()}
+                    >
+                    Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }

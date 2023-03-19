@@ -15,8 +15,12 @@ router
 router
     .route("/asset/group")
     .get(verifyUser(ROLES.Admin, ROLES.User), assetGroupControler.get())
-    .post(verifyUser(ROLES.Admin), assetGroupControler.create())
-    .put(verifyUser(ROLES.Admin), assetGroupControler.update())
-    .delete(verifyUser(ROLES.Admin), assetGroupControler.delete());
+    .post(verifyUser(ROLES.Admin, ROLES.User), assetGroupControler.create())
+    .put(verifyUser(ROLES.Admin, ROLES.User), assetGroupControler.update())
+    .delete(verifyUser(ROLES.Admin, ROLES.User), assetGroupControler.delete());
+
+router
+    .route("/asset/group/delete")
+    .get(verifyUser(ROLES.Admin, ROLES.User), assetGroupControler.cascadeDeleteInfo())
 
 module.exports = router;

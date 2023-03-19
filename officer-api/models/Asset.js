@@ -8,7 +8,7 @@ const AssetSchema = new Schema({
   Description: {type: String},
   Label: {type: String, required: true},
   PurchaseDate: {type: String, required: true},
-  AssetGroup: [{type: Schema.Types.ObjectId, ref: 'AssetGroup', required: true}]
+  AssetGroup: {type: Schema.Types.ObjectId, ref: 'AssetGroup', required: true}
 },
 {
     timestamps: true
