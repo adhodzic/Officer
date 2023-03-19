@@ -53,3 +53,13 @@
 .selected-row{
     background-color: rgba($color: hsl(207, 25%, 60%), $alpha: 0.2);
 }
+
+
+
+.ToolBar{
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem 0.5rem;
+}

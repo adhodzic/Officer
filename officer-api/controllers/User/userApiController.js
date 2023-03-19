@@ -2,7 +2,7 @@ const { UserModel } = require("../../models/User.js");
 const authHelper = require("../../helpers/authentication.helper")
 
 //route: /users
-exports.getUser = function () {
+exports.get = function () {
     return (req, res) => {
         const query = req.query;
         console.log(query)
@@ -15,7 +15,7 @@ exports.getUser = function () {
     };
 };
 
-exports.updateUser = function () {
+exports.update = function () {
     return async (req, res) => {
         const {_id, ...data} =  req.body.data;
         
@@ -24,7 +24,7 @@ exports.updateUser = function () {
     }
 }
 
-exports.deleteUser = function (){
+exports.delete = function (){
     return async (req, res) =>{
         const _ids = req.body.data; 
 
@@ -35,7 +35,7 @@ exports.deleteUser = function (){
     }
 }
 //route: /register
-exports.registerUser = function () {
+exports.register = function () {
     return (req, res) => {
         if (!req.body.Username || !req.body.Password) {
             return res.status(400).json({Message:"Invalid data for login. Make sure that body is JSON Object and it contains username and password keys"});
@@ -63,7 +63,7 @@ exports.registerUser = function () {
     };
 };
 //route: /login
-exports.loginUser = function () {
+exports.login = function () {
     return (req, res) => {
         if (!req.body.Username || !req.body.Password) {
             return res.status(400).json({Message:"Invalid data for login. Make sure that body is JSON Object and it contains username and password keys"});

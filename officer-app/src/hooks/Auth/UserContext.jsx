@@ -1,9 +1,13 @@
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 
 const UserContext = createContext()
 
 const UserProvider = ({ children }) => {
     const [user, setUser] = useState(localStorage.getItem('user'));
+
+    useEffect(()=>{
+      setUser(localStorage.getItem('user'))
+    },[])
 
     function login(data){
         localStorage.setItem('user',data)

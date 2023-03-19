@@ -6,7 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import BTable from "react-bootstrap/Table";
 import './CoreTable.scss'
 import PaginationCore from "./PaginationCore";
-function CoreTable({ data, columns, title }) {
+import CoreTableTools from "./CoreTableTools";
+import CoreModal from "../Modal/CoreModal";
+function CoreTable({setData, data, columns, title, createFormConf, createFunc, apiService }) {
     const IndeterminateCheckbox = forwardRef(
         ({ indeterminate, ...rest }, ref) => {
             const defaultRef = useRef();
@@ -78,11 +80,33 @@ function CoreTable({ data, columns, title }) {
             ]);
         }
     );
+    const [show, setShow] = useState(false);
+    const [isInEdit, setIsInEdit] = useState(false);
+    const handleClose = (dataChanged) =>{
+        typeof(dataChanged) == 'boolean' && dataChanged && setData([])
+        setShow(false)
+    };
+
+    const handleShow = (edit, row = null) => {
+        setIsInEdit(edit);
+        setShow(true);
+    };
+
+    const removeData = async () =>{
+        debugger;
+        let ids = selectedFlatRows.map((row) => {
+            return row.original._id
+        })
+        await apiService.remove(ids)
+        setData([])
+    }
     return (
         <>
+            <CoreModal handleClose={handleClose} modalProp={createFormConf} isInEdit={false} show={show} apiService={apiService} title={title}></CoreModal>
             <div className="table-title">
                 <h3>{title}</h3>
             </div>
+            <CoreTableTools create={handleShow} remove={removeData}></CoreTableTools>
             <div className="table-wrap">
                 <BTable hover size="sm" {...getTableProps()}>
                     <thead>

@@ -23,7 +23,7 @@ function RegisterView() {
     async function registerUser() {
         if (!username || !password || !confirmPassword || !passwordsMatch) return
 
-        let data = await auth.register(username, password, fullname)
+        let res = await auth.register(username, password, fullname)
         console.log(res)
         login(JSON.stringify(res.data))
         navigate('/')

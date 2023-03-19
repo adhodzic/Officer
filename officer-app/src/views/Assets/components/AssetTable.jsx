@@ -1,27 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CoreTable from "../../../components/Core/Table/CoreTable";
 import "./AssetTable.scss";
 
-import api from "../../../services/mockupApi";
+import assetApi from '../../../services/assetApi'
 
 function AssetTable() {
-  const data = React.useMemo(() => api.assetApi(), []);
+  const [assets, setAssets] = useState([])
+  const [loading, setLoading] = useState(true)
+  const loadData = async function () {
+    setLoading(true)
+    const apiData = await assetApi.get();
+    setAssets(apiData);
+    setLoading(false)
+}
+  useEffect(()=>{
+    if(assets?.length == 0) loadData()
+  },[assets])
   const columns = React.useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "name",
+        accessor: "Name",
       },
       {
         Header: "Description",
-        accessor: "description",
+        accessor: "Description",
       },
     ],
     []
   );
+  const assetConf = {
+    Name: {
+        ControlType: "Text"
+    },
+    Label: {
+        ControlType: "Text"
+    },
+    PurchaseDate: {
+        ControlType: "Text"
+    },
+    Description: {
+        ControlType: "Text"
+    }
+}
   return (
     <>
-      <CoreTable data={data} columns={columns} title={'Assets'}></CoreTable>
+      {!loading && assets?.data && 
+      (
+      <>
+      <CoreTable createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets.data} columns={columns} title={'Assets'}></CoreTable>
+      </>
+      )
+    }
     </>
   );
 }

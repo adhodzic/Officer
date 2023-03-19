@@ -14,7 +14,7 @@ module.exports = function verifyUser(...userRoles){
         const token = paraseToken(req.headers)
         const userData = authHelper.authenticate(token)
         if(userData == null){
-            console.log("Invalid token", token)
+            console.log("Invalid token")
             return res.sendStatus(401)
         }
         req.body.userData = userData;

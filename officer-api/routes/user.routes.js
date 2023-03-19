@@ -2,23 +2,17 @@ const express = require("express");
 const router = express.Router();
 const verifyUser = require("../middleware/auth.js");
 const ROLES = require("../config/roles_list.js");
-const userControler = require("../controllers/User/user_API_controller.js");
+const userControler = require("../controllers/User/userApiController.js");
 
-
-router.route("/").get(verifyUser(ROLES.USER, ROLES.ADMIN), (req, res) => {
-    res.json({
-        message: "Welcome to our API",
-    });
-});
 router.route("/user")
-    .get(verifyUser(ROLES.Admin), userControler.getUser())
-    .put(verifyUser(ROLES.Admin), userControler.updateUser())
-    .delete(verifyUser(ROLES.Admin), userControler.deleteUser())
+    .get(verifyUser(ROLES.Admin), userControler.get())
+    .put(verifyUser(ROLES.Admin), userControler.update())
+    .delete(verifyUser(ROLES.Admin), userControler.delete())
 
 router.route("/register")
-    .post(userControler.registerUser());
+    .post(userControler.register());
 
 router.route("/login")
-    .post(userControler.loginUser());
+    .post(userControler.login());
     
 module.exports = router;

@@ -5,13 +5,14 @@ const database = require("./services/database");
 require('dotenv').config()
 
 const userRouter = require('./routes/user.routes.js')
+const assetRouter = require('./routes/asset.routes.js')
 
 const app = express();
 
 app.use(cors())
 database.dbConnect()
 app.use(bodyParser.json())
-app.use('/api',[userRouter])
+app.use('/api',[userRouter, assetRouter])
 
 const port = process.env.PORT || 5001
 
