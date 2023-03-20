@@ -23,9 +23,10 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
                 let options = e[1].DataSource && await getOptionsFromDataSource(e[1].DataSource)
                 return {
                     Name: e[0],
-                    Value: isInEdit ? data[e[0]] : '',
+                    Value: isInEdit ? data[e[0]] : "",
                     ControlType: e[1].ControlType,
-                    Options: e[1].Options ? e[1].Options : options
+                    Options: e[1].Options ? e[1].Options : options,
+                    Required: e[1].Required
                 }
             }));
         }
@@ -48,7 +49,7 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
         const option = field.Options.find((opt)=>{
             return opt.Name == optionName
         })
-        return option.Value
+        return option?.Value || ""
     }
 
     const updateFieldOnChange = function (newValue, field) {
@@ -61,7 +62,7 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
 
     const getOptionsForSelect = function (prop) {
         if (!prop) return
-        let defaultOption = (<option key={'def'}>-</option>)
+        let defaultOption = (<option key={'def'} value="">-</option>)
         return ([defaultOption, [...prop.map(value => {
             return (<option key={value.Value}>{value.Name}</option>)
         })]])
@@ -108,6 +109,7 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
                                                 placeholder={
                                                     "Enter " + field.Name
                                                 }
+                                                required = {field.Required}
                                                 onChange={(e) =>
                                                     updateFieldOnChange(
                                                         e.target.value,
@@ -120,6 +122,7 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
                                             <Form.Select
                                                 // value={field?.Value}
                                                 key={field._id || field.Name}
+                                                required = {field.Required}
                                                 onChange={(e) => {
                                                     const realValue = getRealOptionValue(e,field)
                                                     updateFieldOnChange(

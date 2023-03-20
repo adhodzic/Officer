@@ -26,7 +26,7 @@ instance.interceptors.request.use(function (config) {
     return response;
   }, function (error) {
     if(error.response?.status == 401){
-      window.location.href('/login')
+      window.location.href = window.location.origin + '/login'
     }
     return Promise.reject(error);
   });

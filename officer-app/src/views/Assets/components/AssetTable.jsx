@@ -37,30 +37,30 @@ function AssetTable() {
       {
         Header: "Purchase Date",
         accessor: "PurchaseDate",
-      },
-      {
-        Header: "Asset Group",
-        accessor: "AssetGroup"
       }
     ],
     []
   );
   const assetConf = {
     Name: {
-        ControlType: "Text"
+        ControlType: "Text",
+        Required: true
     },
     Label: {
-        ControlType: "Text"
+        ControlType: "Text",
+        Required: true
     },
     PurchaseDate: {
-        ControlType: "Date"
+        ControlType: "Date",
+        Required: true
     },
     Description: {
         ControlType: "Text"
     },
     AssetGroup: {
       ControlType: "Select",
-      DataSource: assetGroupApi
+      DataSource: assetGroupApi,
+      Required: true
   }
 }
   return (
