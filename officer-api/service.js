@@ -1,16 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const cors = require('cors');
-const database = require("./services/database");
 require('dotenv').config()
+require('./helpers/http-error-helper')
 
-const userRouter = require('./routes/user.routes.js')
-const assetRouter = require('./routes/asset.routes.js')
+const userRouter = require('./routes/user-routes.js')
+const assetRouter = require('./routes/asset-routes.js')
 
 const app = express();
 
 app.use(cors())
-database.dbConnect()
 app.use(bodyParser.json())
 app.use('/api',[userRouter, assetRouter])
 
