@@ -8,6 +8,7 @@ const Actions = {
 }
 
 module.exports = authorize = async function (roleId, method, object) {
+    console.log(roleId,method,object)
     if(!roleId || !method || !object) throw new HttpError("Authorization is missing parameters",500)
     const action = Actions[method];
     const sql = `SELECT COUNT(*) as access FROM RolePrivileges WHERE RoleId = ${roleId} and Act = '${action}' and Object = '${object}'`;

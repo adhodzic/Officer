@@ -36,17 +36,27 @@
 .items-per-pages{
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     column-gap: 5px;
     margin-top: 1rem;
+    padding-left: 1rem;
+    .show-group{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        column-gap: 10px;
+    }
     p{
         margin: 0;
     }
     .form-select{
         max-width: 7.1rem;
+        font-size: 0.8rem;
     }
     .pagination{
         margin: 0;
+        font-size: 0.8rem;
     }
 }
 

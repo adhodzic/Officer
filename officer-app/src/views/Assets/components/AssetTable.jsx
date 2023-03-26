@@ -8,17 +8,25 @@ import assetGroupApi from '../../../services/assetGroupApi'
 function AssetTable() {
   const [assets, setAssets] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const getGroupOptions = async function () {
 
   }
   const loadData = async function () {
-    setLoading(true)
-    const apiData = await assetApi.get();
-    setAssets(apiData);
-    setLoading(false)
+    try{
+      setLoading(true)
+      const apiData = await assetApi.get();
+      setAssets(apiData.data);
+    }catch(error){
+      console.log(error)
+      setAssets([]);
+      setError(true);
+    }finally{
+      setLoading(false)
+    }
 }
   useEffect(()=>{
-    if(assets?.length == 0) loadData()
+    if(assets?.length == 0 && !error) loadData()
   },[assets])
   const columns = React.useMemo(
     () => [
@@ -65,10 +73,10 @@ function AssetTable() {
 }
   return (
     <>
-      {!loading && assets?.data && 
+      {!loading && 
       (
       <>
-      <CoreTable createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets.data} columns={columns} title={'Assets'}></CoreTable>
+      <CoreTable createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets} columns={columns} title={'Assets'}></CoreTable>
       </>
       )
     }

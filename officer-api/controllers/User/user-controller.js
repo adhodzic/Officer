@@ -127,6 +127,7 @@ exports.login = function () {
         try {
             const db = await openConnection();
             const storedPassword = await db.get(getPassword, []);
+            if(!storedPassword?.Password) throw new HttpError('Wrong username or password',401)
             const userData = await db.get(getUser, []);
             db.close();
             let newToken = await authHelper.compareAndCreateToken(
@@ -140,7 +141,7 @@ exports.login = function () {
             });
         } catch (err) {
             console.log(err);
-            return res.status(500).json(err);
+            return res.status(err.statusCode).json(err.message);
         }
     };
 };

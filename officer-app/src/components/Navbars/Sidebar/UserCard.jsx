@@ -19,7 +19,7 @@ function UserCard({ collapseState }) {
                     </div>
                     <div className="user-info">
                         <p className='name'>{userObj.FullName}</p>
-                        <p className='role'>{userObj.Role}</p>
+                        <p className='role'>{userObj.Position}</p>
                     </div>
                     <div className='user-logout'>
                         <FontAwesomeIcon onClick={()=>{logout()}} icon={faRightFromBracket} />

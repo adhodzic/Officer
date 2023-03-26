@@ -1,8 +1,10 @@
 const openConnection = require("../../services/database");
 
-exports.create = function () {
+exports.create = function (object) {
     return async (req, res) => {
-        const data = req.body
+        const {userData, ...data} = req.body
+        console.log(data)
+
         let fields = Object.entries(data)
             .map((field) => {
                 return field[0];
@@ -11,11 +13,11 @@ exports.create = function () {
 
         let values = Object.entries(data)
             .map((value) => {
-                return value[1];
+                return `'${value[1]}'`;
             })
             .join(", ");
 
-        const sql = `INSERT INTO ${object}(${fields}) VALUES('${values}')`;
+        const sql = `INSERT INTO ${object}(${fields}) VALUES(${values})`;
         try {
             const db = await openConnection();
             const resData = await db.run(sql, []);
@@ -36,9 +38,9 @@ exports.get = function (object) {
         }`;
         try {
             const db = await openConnection();
-            const rows = await db.get(sql, []);
+            const rows = await db.all(sql, []);
             db.close();
-            return res.status(200).json(rows || {});
+            return res.status(200).json(rows);
         } catch (err) {
             console.log(err);
             return res.status(500).json(err);
@@ -70,7 +72,7 @@ exports.update = function (object) {
     };
 }
 
-exports.delete = function (){
+exports.delete = function (object){
     return async (req, res) => {
         const _ids = req.body.data;
         const sql = `DELETE FROM ${object} WHERE _id IN (${_ids})`;

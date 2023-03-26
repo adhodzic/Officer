@@ -70,12 +70,18 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
 
     const submitData = async function (event) {
         event.preventDefault();
-        setIsSubmiting(true);
-        let data = fieldData.reduce(
-            (obj, item) => Object.assign(obj, { [item.Name]: item.Value }), {})
-        isInEdit ? await apiService.update({ ...data, _id: rowData._id }) : await apiService.create(data, parentId)
-        setIsSubmiting(false);
-        handleClose(true);
+        try{
+            setIsSubmiting(true);
+            let data = fieldData.reduce(
+                (obj, item) => Object.assign(obj, { [item.Name]: item.Value }), {})
+            isInEdit ? await apiService.update({ ...data, _id: rowData._id }) : await apiService.create(data, parentId)
+            handleClose(true);
+        }catch(error){
+            console.log(error)
+        }
+        finally{
+            setIsSubmiting(false);
+        }
     };
 
     return (

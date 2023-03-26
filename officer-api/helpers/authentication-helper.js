@@ -15,14 +15,14 @@ exports.authenticate = function(token) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return decoded
     } catch (err) {
-        throw new HttpError('Invalid or missing authorization token')
+        throw new HttpError('Invalid or missing authorization token',401)
     }
 };
 
-exports.createToken = function (userData){
+exports.createToken = function (user){
     return jwt.sign(
         {
-            user: userData
+            ...user
         },
         process.env.JWT_SECRET,
         { expiresIn: Number(process.env.TOKEN_TIME) }

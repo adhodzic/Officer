@@ -5,9 +5,11 @@ const instance = axios.create({
 })
 
 const login = async function(Username, Password){
-    return await instance.post('/login',{
-        Username,
-        Password
+    return await instance.get('/login',{
+        params: {
+            Username,
+            Password
+        }
     })
 }
 

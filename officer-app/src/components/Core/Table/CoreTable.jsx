@@ -87,7 +87,7 @@ function CoreTable({ setData, data, columns, title, createFormConf, createFunc, 
     const [isInEdit, setIsInEdit] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const handleClose = (dataChanged) => {
-        typeof (dataChanged) == 'boolean' && dataChanged && setData([])
+        typeof (dataChanged) == 'boolean' && dataChanged && setData(null)
         setShow(false)
     };
 
@@ -110,7 +110,7 @@ function CoreTable({ setData, data, columns, title, createFormConf, createFunc, 
         })
         await apiService.remove(ids)
         setIsDeleting(false)
-        setData([])
+        setData(null)
     }
     return (
         <>
