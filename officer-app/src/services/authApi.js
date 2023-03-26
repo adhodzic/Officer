@@ -13,11 +13,11 @@ const login = async function(Username, Password){
     })
 }
 
-const register = async function(Username, Password, FullName){
+const register = async function(Username, Password, Email){
     return await instance.post('/register',{
         Username,
         Password,
-        FullName
+        Email
     })
 }
 

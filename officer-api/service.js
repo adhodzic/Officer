@@ -7,12 +7,13 @@ require('./helpers/http-error-helper')
 const userRouter = require('./routes/user-routes.js')
 const assetRouter = require('./routes/asset-routes.js')
 const employeeRouter = require('./routes/employee-routes.js')
+const authRouter = require('./routes/auth-routes.js')
 
 const app = express();
 
 app.use(cors())
 app.use(bodyParser.json())
-app.use('/api',[userRouter, assetRouter, employeeRouter])
+app.use('/api',[userRouter, assetRouter, employeeRouter, authRouter])
 
 const port = process.env.PORT || 5001
 

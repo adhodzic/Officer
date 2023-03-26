@@ -1,6 +1,6 @@
 const openConnection = require("../../services/database");
 const authHelper = require("../../helpers/authentication-helper");
-//route: /users
+
 exports.get = function () {
     return async (req, res) => {
         const { _id } = req.query;
@@ -70,19 +70,7 @@ exports.register = function () {
                 });
         }
 
-        const { Username, Password, ...data } = req.body;
-
-        let fields = Object.entries(data)
-            .map((field) => {
-                return field[0];
-            })
-            .join(", ");
-
-        let values = Object.entries(data)
-            .map((value) => {
-                return value[1];
-            })
-            .join(", ");
+        const { Username, Password } = req.body;
 
         const passwordHash = await authHelper.hashPasssword(Password);
         if (!passwordHash)
@@ -107,41 +95,6 @@ exports.register = function () {
         } catch (err) {
             console.log(err);
             return res.status(500).json(err);
-        }
-    };
-};
-//route: /login
-exports.login = function () {
-    return async (req, res) => {
-        if (!req.query.Username || !req.query.Password) {
-            return res
-                .status(400)
-                .json({
-                    Message:
-                        "Invalid data for login. Make sure that body is JSON Object and it contains username and password keys",
-                });
-        }
-        const { Username, Password } = req.query;
-        const getPassword = `SELECT Password FROM User WHERE Username = '${Username}'`;
-        const getUser = `SELECT * FROM vw_UserRole WHERE Username = '${Username}'`;
-        try {
-            const db = await openConnection();
-            const storedPassword = await db.get(getPassword, []);
-            if(!storedPassword?.Password) throw new HttpError('Wrong username or password',401)
-            const userData = await db.get(getUser, []);
-            db.close();
-            let newToken = await authHelper.compareAndCreateToken(
-                userData,
-                Password,
-                storedPassword.Password
-            );
-            return res.status(200).json({
-                Token: newToken,
-                User: userData,
-            });
-        } catch (err) {
-            console.log(err);
-            return res.status(err.statusCode).json(err.message);
         }
     };
 };

@@ -1,18 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const verifyUser = require("../middleware/auth-middleware.js");
-const userControler = require("../controllers/User/user-controller.js");
+const coreControler = require("../controllers/Core/core-controller.js");
 
 router.route("/user")
     .all(verifyUser('User'))
-    .get(userControler.get())
-    .put(userControler.update())
-    .delete(userControler.delete());
-
-router.route("/register")
-    .post(userControler.register());
-
-router.route("/login")
-    .get(userControler.login());
+    .get(coreControler.get('User'))
+    .put(coreControler.update('User'))
+    .delete(coreControler.delete('User'));
     
 module.exports = router;

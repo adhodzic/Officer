@@ -3,14 +3,15 @@ import {Form, Button} from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../hooks/Auth/UserContext'
 import auth from '../../services/authApi'
+import './AuthForms.scss'
 function LoginView() {
     const navigate = useNavigate()
     const {login} = useContext(UserContext)
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState('');
     async function loginUser(){
         if(!username || !password) return
-        let res = await auth.login(username,password)
+        let res = await auth.login(username, password)
         console.log(res.data)
         login(JSON.stringify(res.data))
         navigate('/')
