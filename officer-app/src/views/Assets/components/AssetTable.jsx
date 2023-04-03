@@ -5,7 +5,7 @@ import "./AssetTable.scss";
 import assetApi from '../../../services/assetApi'
 import assetGroupApi from '../../../services/assetGroupApi'
 
-function AssetTable() {
+function AssetTable({setSelectedAssets}) {
   const [assets, setAssets] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -76,7 +76,7 @@ function AssetTable() {
       {!loading && 
       (
       <>
-      <CoreTable createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets} columns={columns} title={'Assets'}></CoreTable>
+      <CoreTable setSelRows={setSelectedAssets} createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets} columns={columns} title={'Assets'}></CoreTable>
       </>
       )
     }

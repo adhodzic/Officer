@@ -9,9 +9,9 @@ function PaginationCore({ gotoPage, canNextPage, canPreviousPage, nextPage, prev
         <div className="items-per-pages">
             <Pagination size="sm">
                 <Pagination.Prev onClick={() => previousPage()} disabled={!canPreviousPage} />
-                {pageOptions.map((i) => {
+                {pageOptions.length > 0 && pageOptions.map((i) => {
                     return <Pagination.Item key={i} onClick={() => gotoPage(i)} active={pageIndex == i}>{i + 1}</Pagination.Item>
-                })}
+                })|| <Pagination.Item>1</Pagination.Item>} 
                 <Pagination.Next onClick={() => nextPage()} disabled={!canNextPage} />
             </Pagination >
             <div className="show-group">

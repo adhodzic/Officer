@@ -10,7 +10,7 @@ import PaginationCore from "./PaginationCore";
 import CoreTableTools from "./CoreTableTools";
 import CoreModal from "../Modal/CoreModal";
 
-function CoreTable({ setData, data, columns, title, createFormConf, createFunc, apiService }) {
+function CoreTable({setSelRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
     const IndeterminateCheckbox = forwardRef(
         ({ indeterminate, ...rest }, ref) => {
             const defaultRef = useRef();
@@ -27,7 +27,6 @@ function CoreTable({ setData, data, columns, title, createFormConf, createFunc, 
             );
         }
     );
-
     //Initial value could be used to preselect row ie. id:1 would select first row
     const [selectedRow, setSelectedRow] = useState({ id: -1 })
 
@@ -86,6 +85,11 @@ function CoreTable({ setData, data, columns, title, createFormConf, createFunc, 
     const [showDeleteWarning, setShowDeleteWarning] = useState(false);
     const [isInEdit, setIsInEdit] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    useEffect(()=>{
+        if(setSelRows) setSelRows(selectedFlatRows)
+    },[selectedFlatRows])
+
     const handleClose = (dataChanged) => {
         typeof (dataChanged) == 'boolean' && dataChanged && setData(null)
         setShow(false)
@@ -118,7 +122,7 @@ function CoreTable({ setData, data, columns, title, createFormConf, createFunc, 
             <div className="table-title">
                 <h3>{title}</h3>
             </div>
-            <CoreTableTools create={handleShow} remove={handleShowDeleteWarning}></CoreTableTools>
+            {actionBar && <CoreTableTools create={handleShow} remove={handleShowDeleteWarning}></CoreTableTools>}
             <div className="table-wrap">
                 <BTable hover size="sm" {...getTableProps()}>
                     <thead>
@@ -187,5 +191,7 @@ function CoreTable({ setData, data, columns, title, createFormConf, createFunc, 
         </>
     );
 }
-
+CoreTable.defaultProps = {
+    actionBar: true
+}
 export default CoreTable;

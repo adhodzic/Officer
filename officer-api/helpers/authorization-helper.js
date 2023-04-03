@@ -14,6 +14,7 @@ module.exports = authorize = async function (roleId, method, object) {
     const sql = `SELECT COUNT(*) as access FROM RolePrivileges WHERE RoleId = ${roleId} and Act = '${action}' and Object = '${object}'`;
     const db = await openConnection();
     const privileges = await db.get(sql, []);
+    await db.close()
     console.log(sql, privileges)
     return privileges.access > 0;
 };

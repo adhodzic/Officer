@@ -8,3 +8,8 @@
         height: max-content;
     }
 }
+
+.selected-asset-list{
+    display: flex;
+    flex-direction: column;
+}
