@@ -2,7 +2,7 @@ import axios from './axios-with-auth'
 
 const get = async function(){
     const res = await axios.get('/asset')
-    return res
+    return res.data
 }
 
 const create = async function(data){
@@ -15,8 +15,13 @@ const remove = async function(data){
     console.log(res.data)
 }
 
+const getUnassigned = async function(){
+    const res = await axios.get('/asset?unassigned=true');
+    return res.data;
+}
 export default {
     get,
+    getUnassigned,
     create,
     remove
 }

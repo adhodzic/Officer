@@ -3,15 +3,16 @@ import { createContext, useEffect, useState } from "react"
 const UserContext = createContext()
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(localStorage.getItem('user'));
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
     useEffect(()=>{
-      setUser(localStorage.getItem('user'))
+      setUser(JSON.parse(localStorage.getItem('user')))
     },[])
 
     function login(data){
-        localStorage.setItem('user',data)
-        setUser(data)
+        localStorage.setItem('token',JSON.stringify(data.Token))
+        localStorage.setItem('user',JSON.stringify(data.User))
+        setUser(data.User)
     }
   
     function logout(){

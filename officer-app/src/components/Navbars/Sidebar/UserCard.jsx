@@ -8,7 +8,7 @@ function UserCard({ collapseState }) {
     const { user, logout } = useContext(UserContext);
     const [userObj, setUserObj] = useState()
     useEffect(() => {
-        setUserObj(JSON.parse(user).User);
+        setUserObj(user);
     }, [user])
     return (
         <>

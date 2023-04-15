@@ -11,6 +11,7 @@ import ProtectedRoute from "./hooks/Auth/ProtectedRoute";
 import { UserProvider } from "./hooks/Auth/UserContext";
 import AssetAgreementView from "./views/AssetAgreements/AssetAgreementView";
 import NewRequest from "./views/AssetAgreements/NewRequest";
+import AssetAgreementDetails from "./views/AssetAgreements/AssetAgreementDetails";
 function App() {
   return (
     <div className="App">
@@ -24,6 +25,7 @@ function App() {
               <Route path="assets" element={<AssetView />}></Route>
               <Route path="employees" element={<EmployeeView />}></Route>
               <Route path="asset-agreements" element={<AssetAgreementView />}></Route>
+              <Route path="asset-agreements/details/:id" element={<AssetAgreementDetails/>}></Route>
               <Route path="*" element={<NotFoundView></NotFoundView>}></Route>
             </Route>
           </Route>

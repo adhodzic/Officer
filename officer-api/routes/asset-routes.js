@@ -7,7 +7,7 @@ const assetGroupControler = require("../controllers/Asset/assetgroup-controller"
 router
     .route("/asset")
     .all(verifyUser('Asset'))
-    .get(assetControler.get('Asset'))
+    .get(assetControler.get())
     .post(assetControler.create('Asset'))
     .put(assetControler.update('Asset'))
     .delete(assetControler.delete('Asset'));

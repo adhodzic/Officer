@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import CoreTable from "../../../components/Core/Table/CoreTable";
 import "./AssetTable.scss";
 
-import assetApi from '../../../services/assetApi'
-import assetGroupApi from '../../../services/assetGroupApi'
+import assetApi from '../../../services/asset-api'
+import assetGroupApi from '../../../services/asset-group-api'
 
-function AssetTable({setSelectedAssets}) {
-  const [assets, setAssets] = useState([])
+function AssetTable({setSelectedAssets, unassigned}) {
+  const [assets, setAssets] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const getGroupOptions = async function () {
@@ -15,8 +15,8 @@ function AssetTable({setSelectedAssets}) {
   const loadData = async function () {
     try{
       setLoading(true)
-      const apiData = await assetApi.get();
-      setAssets(apiData.data);
+      const apiData = unassigned ? await assetApi.getUnassigned() : await assetApi.get();
+      setAssets(apiData);
     }catch(error){
       console.log(error)
       setAssets([]);
@@ -26,7 +26,7 @@ function AssetTable({setSelectedAssets}) {
     }
 }
   useEffect(()=>{
-    if(assets?.length == 0 && !error) loadData()
+    if(assets == null && !error) loadData()
   },[assets])
   const columns = React.useMemo(
     () => [
@@ -65,7 +65,7 @@ function AssetTable({setSelectedAssets}) {
     Description: {
         ControlType: "Text"
     },
-    AssetGroup: {
+    AssetGroupId: {
       ControlType: "Select",
       DataSource: assetGroupApi,
       Required: true
@@ -73,7 +73,7 @@ function AssetTable({setSelectedAssets}) {
 }
   return (
     <>
-      {!loading && 
+      {!loading && assets != null &&
       (
       <>
       <CoreTable setSelRows={setSelectedAssets} createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets} columns={columns} title={'Assets'}></CoreTable>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import CoreTable from "../../../components/Core/Table/CoreTable";
 import '../AssetAgreementView.scss'
-
+import { NavLink  } from "react-router-dom"
+import BLink from "react-bootstrap/NavLink";
 import AssetAgreementApi from '../../../services/asset-agreement-api'
 
 function AssetAgreementTable() {
@@ -13,7 +14,7 @@ function AssetAgreementTable() {
     try {
       setLoading(true)
       const apiData = await AssetAgreementApi.get();
-      setAssetAgreements(apiData.data);
+      setAssetAgreements(apiData);
     } catch (error) {
       console.log(error)
       setAssetAgreements([]);
@@ -30,6 +31,7 @@ function AssetAgreementTable() {
       {
         Header: "Name",
         accessor: "Name",
+        Cell: props => <BLink as={NavLink} to={`/asset-agreements/details/${props.row.original._id}`}>{props.value}</BLink>
       },
       {
         Header: "Reason",
@@ -61,7 +63,7 @@ function AssetAgreementTable() {
       {!loading && AssetAgreements !== null &&
         (
           <>
-            <CoreTable createFormConf={AssetAgreementConf} apiService={AssetAgreementApi} setData={setAssetAgreements} data={AssetAgreements} columns={columns} title={'AssetAgreements'}></CoreTable>
+            <CoreTable details={true} createFormConf={AssetAgreementConf} apiService={AssetAgreementApi} setData={setAssetAgreements} data={AssetAgreements} columns={columns} title={'AssetAgreements'}></CoreTable>
           </>
         )
       }

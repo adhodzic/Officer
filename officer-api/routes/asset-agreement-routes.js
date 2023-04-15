@@ -10,4 +10,9 @@ router
     .post(assetAgreementControler.create('AssetAgreement'))
     .put(assetAgreementControler.update('AssetAgreement'))
     .delete(assetAgreementControler.delete('AssetAgreement'));
+
+router
+    .route("/asset-agreement/pdf")
+    .get(assetAgreementControler.pdf());
+
 module.exports = router;

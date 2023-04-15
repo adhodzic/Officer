@@ -17,6 +17,32 @@ exports.createAssetAgreement = async function (reason, userId) {
     }
 };
 
+exports.getDataForPDF = async function(id){
+    const db = await openConnection();
+    const sql = `SELECT * FROM vw_AssetAgreementFull WHERE _id = ?`
+    try{
+        const data = await db.get(sql,[id])
+        return data
+    }catch(err){
+        throw new HttpError(err, 500)
+    }finally{
+        await db.close()
+    }
+}
+
+exports.updateDocumentURL = async function(url,id){
+    const db = await openConnection();
+    const sql = `UPDATE AssetAgreement SET DocumentURL = ? WHERE _id = ?`
+    try{
+        const data = await db.run(sql,[url,id])
+        return data
+    }catch(err){
+        throw new HttpError(err, 500)
+    }finally{
+        await db.close()
+    }
+}
+
 exports.createAssetsForAgreement = async function (assetAgreementId, assets) {
     console.log(assetAgreementId, assets);
     if (!assetAgreementId || !assets.length > 0)

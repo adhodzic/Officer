@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CoreTable from "../../../components/Core/Table/CoreTable";
 import "./AssetTable.scss";
 
-import assetGroupApi from "../../../services/assetGroupApi";
+import assetGroupApi from "../../../services/asset-group-api";
 
 function AssetGroupTable(actionBar) {
   const [assetGroups, setAssetGroups] = useState([])

@@ -1,16 +1,15 @@
 import { forwardRef, useState, useRef, useEffect } from "react";
 import { useTable, useRowSelect, usePagination } from "react-table";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Nav } from "react-bootstrap";
 import BTable from 'react-bootstrap/Table'
 import './CoreTable.scss'
 import PaginationCore from "./PaginationCore";
 import CoreTableTools from "./CoreTableTools";
 import CoreModal from "../Modal/CoreModal";
 
-function CoreTable({setSelRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
+function CoreTable({details, setSelRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
     const IndeterminateCheckbox = forwardRef(
         ({ indeterminate, ...rest }, ref) => {
             const defaultRef = useRef();

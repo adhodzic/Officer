@@ -14,7 +14,10 @@
     "cors": "^2.8.5",
     "express.js": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.4",
     "mongoose": "^6.5.5",
+    "pupeteer": "^0.0.1",
+    "puppeteer": "^19.8.3",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.6"
   },

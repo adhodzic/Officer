@@ -7,7 +7,6 @@ import { UserContext } from "../../hooks/Auth/UserContext";
 import './AssetAgreementView.scss'
 function NewRequest() {
     const { user } = useContext(UserContext);
-    const [userObj, setUserObj] = useState()
     const [selectedAssets, setSelectedAssets] = useState([])
     const [show, setShow] = useState(false)
     const [reason, setReason] = useState()
@@ -20,9 +19,6 @@ function NewRequest() {
             setAssetValidation(false)
         }, 3000)
     }, [assetValidation])
-    useEffect(() => {
-        setUserObj(JSON.parse(user).User);
-    }, [user])
     function handleClose(submit) {
         setShow(false)
     }
@@ -35,7 +31,6 @@ function NewRequest() {
         const assets = selectedAssets.map(a => {
             return a.original._id
         })
-        console.log(user)
         const newAgrement = {
             Reason: reason,
             Assets: assets
@@ -51,13 +46,13 @@ function NewRequest() {
                     <div className="col">
                         <Form.Group>
                             <Form.Label>Full Name</Form.Label>
-                            <Form.Control value={userObj?.FullName} type="text" disabled></Form.Control>
+                            <Form.Control onChange={(e) => true} value={user?.FullName} type="text" disabled></Form.Control>
                         </Form.Group>
                     </div>
                     <div className="col">
                         <Form.Group>
                             <Form.Label>OIB</Form.Label>
-                            <Form.Control value={userObj?.OIB} type="text" disabled></Form.Control>
+                            <Form.Control onChange={(e) => true} value={user?.OIB} type="text" disabled></Form.Control>
                         </Form.Group>
                     </div>
                 </div>
@@ -65,13 +60,13 @@ function NewRequest() {
                     <div className="col">
                         <Form.Group>
                             <Form.Label>Email</Form.Label>
-                            <Form.Control value={userObj?.Email} type="text" disabled></Form.Control>
+                            <Form.Control onChange={(e) => true} value={user?.Email} type="text" disabled></Form.Control>
                         </Form.Group>
                     </div>
                     <div className="col">
                         <Form.Group>
                             <Form.Label>Position</Form.Label>
-                            <Form.Control value={userObj?.Position} type="text" disabled></Form.Control>
+                            <Form.Control onChange={(e) => true} value={user?.Position} type="text" disabled></Form.Control>
                         </Form.Group>
                     </div>
                 </div>
@@ -111,7 +106,7 @@ function NewRequest() {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <AssetTable setSelectedAssets={setSelectedAssets} actionBar={false}></AssetTable>
+                    <AssetTable unassigned={true} setSelectedAssets={setSelectedAssets} actionBar={false}></AssetTable>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

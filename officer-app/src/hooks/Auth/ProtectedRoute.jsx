@@ -4,6 +4,7 @@ import { UserContext } from "./UserContext";
 
 function ProtectedRoute(){
   const {user} = useContext(UserContext)
+  console.log(user)
   return user ? <Outlet/> : <Navigate to={'/login'}/>
 }
 

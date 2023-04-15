@@ -19,9 +19,8 @@ exports.authentication = function () {
                 if(!Email) throw new HttpError(`There is no user with username: ${Username}`)
                 const employeeId = await validateEmployee(Email);
                 if(employeeId === undefined) throw new HttpError(`Could not find employee with email: ${Email}`, 401);
-                userData = await createUser(Username, Password, employeeId, 'ADMIN')
+                userData = await createUser(Username, Password, employeeId, 'EMPLOYEE')
             }
-            console.log(userData)
             const userFullData = await getUserFromDb(Username);
             const newToken = await authHelper.compareAndCreateToken(
                 userFullData,

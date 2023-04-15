@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 function getToken(){
-    return JSON.parse(localStorage.getItem('user'))?.Token
+    return JSON.parse(localStorage.getItem('token'))
 }
 
 const instance = axios.create({
