@@ -5,14 +5,15 @@ import "./AssetTable.scss";
 import assetGroupApi from "../../../services/asset-group-api";
 
 function AssetGroupTable(actionBar) {
-  const [assetGroups, setAssetGroups] = useState([])
+  const [assetGroups, setAssetGroups] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const loadData = async function () {
     try{
       setLoading(true)
       const apiData = await assetGroupApi.get();
-      setAssetGroups(apiData.data);
+      setAssetGroups(apiData);
+      console.log(apiData)
     }catch(error){
       console.log(error)
       setAssetGroups([]);
@@ -22,7 +23,7 @@ function AssetGroupTable(actionBar) {
     }
   }
   useEffect(() => {
-    if (assetGroups?.length == 0 && !error) loadData()
+    if (assetGroups == null && !error) loadData()
   }, [assetGroups])
   const columns = React.useMemo(
     () => [

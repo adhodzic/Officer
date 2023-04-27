@@ -6,7 +6,7 @@ const assetAgreementControler = require("../controllers/AssetAgreement/asset-agr
 router
     .route("/asset-agreement")
     .all(verifyUser('AssetAgreement'))
-    .get(assetAgreementControler.get('AssetAgreement'))
+    .get(assetAgreementControler.get('vw_AssetAgreementFull'))
     .post(assetAgreementControler.create('AssetAgreement'))
     .put(assetAgreementControler.update('AssetAgreement'))
     .delete(assetAgreementControler.delete('AssetAgreement'));
@@ -14,5 +14,8 @@ router
 router
     .route("/asset-agreement/pdf")
     .get(assetAgreementControler.pdf());
+router
+    .route("/asset-agreement/sign")
+    .get(assetAgreementControler.signPdf());
 
 module.exports = router;

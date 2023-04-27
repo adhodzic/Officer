@@ -9,7 +9,7 @@ import PaginationCore from "./PaginationCore";
 import CoreTableTools from "./CoreTableTools";
 import CoreModal from "../Modal/CoreModal";
 
-function CoreTable({details, setSelRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
+function CoreTable({details, setSelRows,selRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
     const IndeterminateCheckbox = forwardRef(
         ({ indeterminate, ...rest }, ref) => {
             const defaultRef = useRef();
@@ -26,6 +26,16 @@ function CoreTable({details, setSelRows, actionBar, setData, data, columns, titl
             );
         }
     );
+
+    const [initSelectedRows, setInitSelectedRows] = useState({});
+    //Set preselected rows
+    useEffect(()=>{
+        if(!selRows) return
+        const initArr = selRows.map((row)=>{
+            return [row.id, true]
+        })
+        setInitSelectedRows(Object.fromEntries(initArr))
+    },[])
     //Initial value could be used to preselect row ie. id:1 would select first row
     const [selectedRow, setSelectedRow] = useState({ id: -1 })
 
@@ -48,7 +58,11 @@ function CoreTable({details, setSelRows, actionBar, setData, data, columns, titl
         {
             columns,
             data,
-            initialState: { pageIndex: 0 },
+            initialState: {
+                 pageIndex: 0,
+                 pageSize: 5,
+                 selectedRowIds: initSelectedRows
+            },
         },
         usePagination,
         useRowSelect,

@@ -11,8 +11,8 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
 
     async function getOptionsFromDataSource(dataSource) {
         let options = await dataSource.get();
-        if (options.data.length <= 0) return []
-        return options.data.map((option) => {
+        if (!options?.length > 0) return []
+        return options.map((option) => {
             return { Name: option.Name, Value: option._id }
         })
     }

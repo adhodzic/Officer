@@ -2,7 +2,7 @@ import axios from './axios-with-auth'
 
 const get = async function(){
     const res = await axios.get('/asset/group')
-    return res
+    return res.data
 }
 
 const create = async function(data){

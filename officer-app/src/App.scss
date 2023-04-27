@@ -9,6 +9,8 @@
         margin-left: 14rem;
         transition: all 0.3s;
         padding: 1rem 5rem;
+        overflow: auto;
+        max-width: 100%;
     }
     .container.collapsed{
         margin-left: 4rem;

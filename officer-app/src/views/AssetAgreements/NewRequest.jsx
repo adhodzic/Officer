@@ -5,7 +5,9 @@ import AssetTable from "../Assets/components/AssetTable"
 import { useContext } from "react";
 import { UserContext } from "../../hooks/Auth/UserContext";
 import './AssetAgreementView.scss'
+import { useNavigate } from 'react-router-dom'
 function NewRequest() {
+    const navigate = useNavigate()
     const { user } = useContext(UserContext);
     const [selectedAssets, setSelectedAssets] = useState([])
     const [show, setShow] = useState(false)
@@ -22,7 +24,7 @@ function NewRequest() {
     function handleClose(submit) {
         setShow(false)
     }
-    function createRequest(e) {
+    async function createRequest(e) {
         e.preventDefault()
         if (selectedAssets.length <= 0) {
             setAssetValidation(true);
@@ -35,8 +37,10 @@ function NewRequest() {
             Reason: reason,
             Assets: assets
         }
-        console.log(newAgrement)
-        assetAgreementApi.create(newAgrement)
+        const data = await assetAgreementApi.create(newAgrement)
+        console.log(data.scope,data.scope?.["lastID"])
+        if(!data?.scope?.lastID > 0) return
+        navigate(`/asset-agreements/details/${data.scope.lastID}`)
     }
     return (
         <div className='NewRequest'>
@@ -85,12 +89,12 @@ function NewRequest() {
                             {selectedAssets.map(a => {
                                 return (
                                     <div key={a.original._id} className="selected-asset">
-                                        {a.original.Name}
+                                        <p>{a.original.Name}</p>
                                     </div>
                                 )
                             })}
                         </div>
-                        <Button onClick={() => setShow(true)} >+</Button>
+                        <Button onClick={() => setShow(true)} >Add assets</Button>
                     </Form.Group>
                 </div>
                 <div className="row">
@@ -106,7 +110,7 @@ function NewRequest() {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <AssetTable unassigned={true} setSelectedAssets={setSelectedAssets} actionBar={false}></AssetTable>
+                    <AssetTable unassigned={true} setSelectedAssets={setSelectedAssets} selectedAssets={selectedAssets} actionBar={false}></AssetTable>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

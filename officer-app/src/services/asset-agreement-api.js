@@ -7,7 +7,7 @@ const get = async function(id){
 
 const create = async function(data){
     const res = await axios.post('/asset-agreement',data)
-    console.log(res.data)
+    return res.data
 }
 
 const remove = async function(data){
@@ -33,10 +33,16 @@ const pdf = async function(id){
     link.remove();
 }
 
+const signPdf = async function(id){
+    const data = axios.post('/asset-agreement/sign',{id});
+
+}
+
 
 export default {
     get,
     create,
     remove,
-    pdf
+    pdf,
+    signPdf
 }
