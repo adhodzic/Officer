@@ -1,30 +1,42 @@
 const authHelper = require("../../helpers/authentication-helper");
-const {getUserFromDb, getUserByUsername, validateEmployee, createUser} = require('../../helpers/login-helper.js')
+const {getUserFromDb, getUserByUsername, validateEmployee, createUser, userExists, getEmployeeByEmail} = require('../../helpers/login-helper.js')
+
+exports.register = function () {
+    return async (req, res) => {
+        const {activationCode, password, email} = req.body;
+        if (!activationCode || !password || !email) throw new HttpError("Invalid register data",400);
+        if(await userExists(email)) throw new HttpError("User already exists", 400);
+        try{
+        const {ActivationCode,_id} = await getEmployeeByEmail(email);
+
+        if(activationCode != ActivationCode) throw new HttpError("Invalid Activation Code", 401);
+
+        const userData = await createUser(email,password,_id,'ADMIN')
+
+        return res.status(200).json(userData);
+        }catch(error){
+           return res.status(error.statusCode).send(error.message)
+        } 
+    }
+}
 
 exports.authentication = function () {
     return async (req, res) => {
-        if (!req.query.Username || !req.query.Password) {
-            return res
-                .status(400)
-                .json({
-                    Message:
-                        "Invalid data for login. Make sure that body is JSON Object and it contains username and password keys",
-                });
-        }
-        const { Username, Password, Email } = req.query;
+        const { password, email } = req.query;
+        if (!password || !email) throw new HttpError("Invalid data for login. Make sure that body is JSON Object and it contains email and password keys",400);
         try {
-            let userData = await getUserByUsername(Username);
+            let userData = await getUserByUsername(email);
 
             if(userData === undefined){
-                if(!Email) throw new HttpError(`There is no user with username: ${Username}`)
-                const employeeId = await validateEmployee(Email);
-                if(employeeId === undefined) throw new HttpError(`Could not find employee with email: ${Email}`, 401);
-                userData = await createUser(Username, Password, employeeId, 'EMPLOYEE')
+                if(!email) throw new HttpError(`There is no user with email: ${email}`,400)
+                const employeeId = await validateEmployee(email);
+                if(employeeId === undefined) throw new HttpError(`Could not find employee with email: ${email}`, 401);
+                userData = await createUser(email, password, employeeId, 'EMPLOYEE')
             }
-            const userFullData = await getUserFromDb(Username);
+            const userFullData = await getUserFromDb(email);
             const newToken = await authHelper.compareAndCreateToken(
                 userFullData,
-                Password,
+                password,
                 userData?.Password
             );
             return res.status(200).json({

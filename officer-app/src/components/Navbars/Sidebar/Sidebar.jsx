@@ -2,11 +2,12 @@ import "./Sidebar.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBuilding, faBoxesStacked, faListCheck, faPeopleGroup, faChevronCircleLeft, faGear, faFileCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import UserCard from "./UserCard";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../../hooks/Auth/UserContext";
 function Sidebar({ collapseState, setCollapseState }) {
     const { logout } = useContext(UserContext)
+    const navigate = useNavigate()
     return (
         <div className={`Sidebar ${collapseState ? 'collapsed' : ''}`}>
             <div className="Sidebar-collapse-button" onClick={(e) => { setCollapseState(!collapseState) }}>
@@ -40,7 +41,7 @@ function Sidebar({ collapseState, setCollapseState }) {
                 </div>
             </div>
             <div className="Sidebar-footer">
-                <FontAwesomeIcon icon={faGear} />
+                <FontAwesomeIcon onClick={()=> navigate('/application-settings')} icon={faGear} />
             </div>
         </div>
     );

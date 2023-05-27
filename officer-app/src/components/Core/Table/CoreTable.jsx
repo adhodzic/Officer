@@ -9,7 +9,7 @@ import PaginationCore from "./PaginationCore";
 import CoreTableTools from "./CoreTableTools";
 import CoreModal from "../Modal/CoreModal";
 
-function CoreTable({details, setSelRows,selRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
+function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
     const IndeterminateCheckbox = forwardRef(
         ({ indeterminate, ...rest }, ref) => {
             const defaultRef = useRef();
@@ -98,6 +98,10 @@ function CoreTable({details, setSelRows,selRows, actionBar, setData, data, colum
     const [showDeleteWarning, setShowDeleteWarning] = useState(false);
     const [isInEdit, setIsInEdit] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    useEffect(()=>{
+
+    })
 
     useEffect(()=>{
         if(setSelRows) setSelRows(selectedFlatRows)

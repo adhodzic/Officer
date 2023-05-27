@@ -10,6 +10,12 @@
     border-radius: 0.5rem;
     margin-bottom: 2rem;
     transition: width 0.3s, height 0.3s, background-color 0.3s;
+    .user-container{
+        display: flex;
+        flex-direction: row;
+        column-gap: 20px;
+        cursor: pointer;
+    }
     .user-icon{
         transition: transform 0.3s;
         img{

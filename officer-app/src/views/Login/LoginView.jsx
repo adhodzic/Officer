@@ -1,12 +1,12 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {Form, Button} from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../hooks/Auth/UserContext'
 import auth from '../../services/auth-api'
 import './AuthForms.scss'
 function LoginView() {
     const navigate = useNavigate()
-    const {login} = useContext(UserContext)
+    const {login,isUserLoggedIn} = useContext(UserContext)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     async function loginUser(){
@@ -15,6 +15,11 @@ function LoginView() {
         login(res.data)
         navigate('/')
     }
+    useEffect(()=>{
+        if(isUserLoggedIn()){
+            navigate('/')
+        }
+    })
     return (
         <div className="Login">
             <Form>
@@ -37,6 +42,7 @@ function LoginView() {
                     Login
                 </Button>
             </Form>
+            <Link to={'/register'}>Register</Link>
         </div>
     )
 }

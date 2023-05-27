@@ -1,16 +1,17 @@
 const {header, footer} = require('../generic/generic-sections')
 
 function assetList(assets){
-    return assets.map((asset, i) =>{
+    return assets.map((asset) =>{
         return (`<li>${asset.Name}</li>`)
     }).join('\n')
 }
 
-exports.assetAgreement = function(user, agreement, assets,title,foot){
+exports.assetAgreement = function(user, agreement, assets, reviewers, title, foot){
     return `
     <div>
         ${header(title)}
         <div>
+            <div style="text-align:center;">
             <p>
             <b>Neka tvrtka d.o.o.,</b> Neka adresa 15B, Pula,
             OIB: 21313543842, (u daljnjem tekstu Poslodavac)
@@ -26,11 +27,22 @@ exports.assetAgreement = function(user, agreement, assets,title,foot){
             <p>
                 <b>Potvrda o zaduženju opreme</b>
             </p>
+            </div>
             <p>Radik je primio opremu sa sljedećim specifikacijama</p></br>
             <ol>
              ${assetList(assets)}
             </ol>
-            
+            <br><br><br><br>
+            <div style="margin-left:10px;">
+            ${reviewers.map((reviewer)=>{
+                return(
+                    `<div style="margin-bottom:48px; width: 148px;">
+                        <hr>
+                        <p style="margin:0;"><b>${reviewer.FullName}</b></p>
+                        <p style="color:grey;font-size:10px;margin:0;">${reviewer.Position}</p></div>`
+                )
+            })}
+            </div>            
         </div>
         ${footer(foot)}
     </div>

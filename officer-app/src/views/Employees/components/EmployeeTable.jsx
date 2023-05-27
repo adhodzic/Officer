@@ -63,6 +63,10 @@ function EmployeeTable() {
       ControlType: "Text",
       Required: true
     },
+    Address: {
+      ControlType: "Text",
+      Required: true
+    },
     OIB: {
       ControlType: "Text",
       Required: true

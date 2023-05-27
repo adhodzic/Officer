@@ -16,12 +16,13 @@ function AssetAgreementDetails() {
         console.log(p.id)
         await assetAgreementApi.pdf(p.id)
     }
-    async function signDoc(){
+    async function signDoc() {
         await assetAgreementApi.signPdf(p.id)
     }
     async function loadData() {
         setIsLoading(true)
         const data = await assetAgreementApi.get(p.id);
+        data[0].Reviewers = JSON.parse(data[0].Reviewers);
         setGeneralInfo(data[0])
         console.log(data[0])
         setIsLoading(false)
@@ -36,57 +37,65 @@ function AssetAgreementDetails() {
                 <>
                     <Form>
                         <div className='row'>
-                            <div className='col'>
-                            <div className="row">
-                                <Form.Group>
-                                    <Form.Label>Full Name</Form.Label>
-                                    <Form.Control value={user.FullName} type="text" disabled></Form.Control>
-                                </Form.Group>
-                            </div>
-                            <div className="row">
-                                <Form.Group>
-                                    <Form.Label>OIB</Form.Label>
-                                    <Form.Control value={user.OIB} type="text" disabled></Form.Control>
-                                </Form.Group>
-                            </div>
-                            <div className="row">
-                                <Form.Group>
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control value={user.Email} type="text" disabled></Form.Control>
-                                </Form.Group>
-                            </div>
-                            <div className="row">
-                                <Form.Group>
-                                    <Form.Label>Position</Form.Label>
-                                    <Form.Control value={user.Position} type="text" disabled></Form.Control>
-                                </Form.Group>
-                            </div>
-                            <div className='row'>
-                                <FormGroup>
-                                    <Form.Label>User agreement</Form.Label>
-                                    <Form.Control value={generalInfo.Name} type="text" disabled></Form.Control>
-                                </FormGroup>
-                            </div>
-                            <div className='row'>
-                                <FormGroup>
-                                    <Form.Label>Reason</Form.Label>
-                                    <Form.Control value={generalInfo.Reason} type="text" disabled></Form.Control>
-                                </FormGroup>
-                            </div>
-                            <div className='row'>
-                                <FormGroup>
-                                    <Form.Label>Status</Form.Label>
-                                    <Form.Control value={generalInfo.Status} type="text" disabled></Form.Control>
-                                </FormGroup>
-                            </div>
-                            </div>
-                        <div className='col'>
-                            <ul>
-                                {generalInfo.Assets.split(',').map((a) => {
-                                    return <li>{a}</li>
-                                })}
-                            </ul>
+                            <h4>Asset Agreement Details</h4>
                         </div>
+                        <div className='row'>
+                            <div className='col'>
+                                <div className="row">
+                                    <Form.Group>
+                                        <Form.Label>Full Name</Form.Label>
+                                        <Form.Control value={user.FullName} type="text" disabled></Form.Control>
+                                    </Form.Group>
+                                </div>
+                                <div className="row">
+                                    <Form.Group>
+                                        <Form.Label>OIB</Form.Label>
+                                        <Form.Control value={user.OIB} type="text" disabled></Form.Control>
+                                    </Form.Group>
+                                </div>
+                                <div className="row">
+                                    <Form.Group>
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control value={user.Email} type="text" disabled></Form.Control>
+                                    </Form.Group>
+                                </div>
+                                <div className="row">
+                                    <Form.Group>
+                                        <Form.Label>Position</Form.Label>
+                                        <Form.Control value={user.Position} type="text" disabled></Form.Control>
+                                    </Form.Group>
+                                </div>
+                                <div className='row'>
+                                    <FormGroup>
+                                        <Form.Label>User agreement</Form.Label>
+                                        <Form.Control value={generalInfo.Name} type="text" disabled></Form.Control>
+                                    </FormGroup>
+                                </div>
+                                <div className='row'>
+                                    <FormGroup>
+                                        <Form.Label>Reason</Form.Label>
+                                        <Form.Control value={generalInfo.Reason} type="text" disabled></Form.Control>
+                                    </FormGroup>
+                                </div>
+                                <div className='row'>
+                                    <FormGroup>
+                                        <Form.Label>Status</Form.Label>
+                                        <Form.Control value={generalInfo.Status} type="text" disabled></Form.Control>
+                                    </FormGroup>
+                                </div>
+                            </div>
+                            <div className='col'>
+                                <h4>Assets</h4>
+                                {generalInfo.Assets.split(',').map((a, i) => {
+                                    return <p key={i}><b>{a}</b></p>
+                                })}
+                                <h4>Reviewers</h4>
+
+                                {generalInfo.Reviewers.map((a, i) => {
+                                    return <p key={i}><b>{a.FullName}</b>{a.Signed ? ' Approved the document' : ' Pending document approval'}</p>
+                                })}
+
+                            </div>
                         </div>
                     </Form>
                     {<Button type='button' onClick={() => generateDoc()}>Download document</Button>}

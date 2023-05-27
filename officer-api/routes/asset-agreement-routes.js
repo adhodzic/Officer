@@ -16,6 +16,7 @@ router
     .get(assetAgreementControler.pdf());
 router
     .route("/asset-agreement/sign")
-    .get(assetAgreementControler.signPdf());
+    .all(verifyUser('AssetAgreement'))
+    .post(assetAgreementControler.signPdf());
 
 module.exports = router;

@@ -12,6 +12,8 @@ import { UserProvider } from "./hooks/Auth/UserContext";
 import AssetAgreementView from "./views/AssetAgreements/AssetAgreementView";
 import NewRequest from "./views/AssetAgreements/NewRequest";
 import AssetAgreementDetails from "./views/AssetAgreements/AssetAgreementDetails";
+import UserSettingsView from "./views/UserSettings/UserSettingsView";
+import ApplicationSettingsView from "./views/ApplicationSettings/ApplicationSettingsView"
 function App() {
   return (
     <div className="App">
@@ -26,6 +28,8 @@ function App() {
               <Route path="employees" element={<EmployeeView />}></Route>
               <Route path="asset-agreements" element={<AssetAgreementView />}></Route>
               <Route path="asset-agreements/details/:id" element={<AssetAgreementDetails/>}></Route>
+              <Route path="user-settings" element={<UserSettingsView />}></Route>
+              <Route path="application-settings" element={<ApplicationSettingsView />}></Route>
               <Route path="*" element={<NotFoundView></NotFoundView>}></Route>
             </Route>
           </Route>

@@ -19,6 +19,8 @@
     "react-bootstrap": "^2.7.2",
     "react-bootstrap-sidebar-menu": "^2.0.3",
     "react-dom": "^18.2.0",
+    "react-image-crop": "^10.0.9",
+    "react-images-uploading": "^3.1.7",
     "react-router-dom": "^6.8.1",
     "react-table": "^7.8.0",
     "sass": "^1.58.3"

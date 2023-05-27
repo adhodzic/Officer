@@ -1,11 +1,30 @@
 const openConnection = require("../services/database");
 const authHelper = require("../helpers/authentication-helper")
-const getUserByUsername = async function (Username) {
-    const sql = `SELECT * FROM User WHERE Username = '${Username}'`;
+const userExists = async function(username){
+    console.log("Check")
+    const sql = `SELECT COUNT(1) as count FROM User WHERE Username = '${username}'`;
+    const db = await openConnection();
+    const userData = await db.get(sql, []);
+    await db.close();
+    console.log(userData.count)
+    return userData.count > 0?true:false;
+}
+
+const getUserByUsername = async function (username) {
+    const sql = `SELECT * FROM User WHERE Username = '${username}'`;
     const db = await openConnection();
     const userData = await db.get(sql, []);
     db.close();
     return userData;
+};
+
+const getEmployeeByEmail = async function (email) {
+    const sql = `SELECT * FROM Employee WHERE Email = ?`;
+    const db = await openConnection();
+    const employeData = await db.get(sql, [email]);
+    if(employeData == null) throw new HttpError(`Employee with email: ${email} does not exist`,400)
+    await db.close();
+    return employeData;
 };
 
 const getUserFromDb = async function (Username) {
@@ -39,15 +58,15 @@ const getRoleByName = async function (roleName) {
     return role?._id;
 };
 
-const createUser = async function (Username, Password, employeeId, roleName) {
-    const passwordHash = await authHelper.hashPasssword(Password);
+const createUser = async function (username, password, employeeId, roleName) {
+    const passwordHash = await authHelper.hashPasssword(password);
     if (!passwordHash) throw new HttpError("Unable to hash password", 500);
     const roleId = await getRoleByName(roleName);
 
-    const sql = `INSERT INTO User(Username, Password, RoleId, EmployeeId) VALUES('${Username}', '${passwordHash}', ${roleId}, ${employeeId})`;
+    const sql = `INSERT INTO User(Username, Password, RoleId, EmployeeId) VALUES('${username}', '${passwordHash}', ${roleId}, ${employeeId})`;
     const db = await openConnection();
     await db.run(sql, []);
-    const userData = await getUserByUsername(Username);
+    const userData = await getUserByUsername(username);
     await assignEmployeeToUser(employeeId, userData._id)
     db.close();
     return userData
@@ -58,5 +77,7 @@ module.exports = {
     getUserFromDb,
     validateEmployee,
     assignEmployeeToUser,
-    createUser
+    createUser,
+    userExists,
+    getEmployeeByEmail
 };

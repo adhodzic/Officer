@@ -31,7 +31,7 @@ function NewRequest() {
             return
         }
         const assets = selectedAssets.map(a => {
-            return a.original._id
+            return {_id: a.original._id,Name: a.original.Name}
         })
         const newAgrement = {
             Reason: reason,
@@ -40,6 +40,7 @@ function NewRequest() {
         const data = await assetAgreementApi.create(newAgrement)
         console.log(data.scope,data.scope?.["lastID"])
         if(!data?.scope?.lastID > 0) return
+        window.open(data.envelopeUrl, '_blank').focus();
         navigate(`/asset-agreements/details/${data.scope.lastID}`)
     }
     return (

@@ -10,7 +10,9 @@ const instance = axios.create({
 instance.interceptors.request.use(function (config) {
     let token = getToken()
     if(!token){
-      console.log("Token is unavaliable or invalid")
+      console.log("Token is unavaliable or invalid");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.href = window.location.origin + '/login'
     }
     config.headers.Authorization = `Bearer ${token}`
@@ -21,11 +23,11 @@ instance.interceptors.request.use(function (config) {
   });
 
   instance.interceptors.response.use(function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
     return response;
   }, function (error) {
     if(error.response?.status == 401){
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.href = window.location.origin + '/login'
     }
     return Promise.reject(error);
