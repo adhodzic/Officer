@@ -1,13 +1,4 @@
-import axios from './axios-with-auth'
-
-function uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    .replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0, 
-            v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
+import axios from './Auth/axios-with-auth'
 
 const get = async function(){
     const res = await axios.get('/employee')

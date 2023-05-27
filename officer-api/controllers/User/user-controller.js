@@ -151,12 +151,17 @@ exports.register = function () {
 
 exports.getImage = function () {
     return async (req, res) => {
-        console.log(req.body.userData)
         const {_id, FullName} = req.body.userData
-        var directoryPath = __dirname + `/../../static/images`;
-        const fileName = fs.readdirSync(directoryPath).find(file => path.parse(file).name === `${_id}`);
-        if(!fileName) return res.status(400).send(`Cound not find profile image for ${FullName}`)
-        var filePath= directoryPath + '/' + fileName;
+        const directoryPath = path.resolve(__dirname + `/../../static`);
+        var filePath = ''
+        var fileName = fs.readdirSync(directoryPath + '/images').find(file => path.parse(file).name === `${_id}`);
+        if(fileName === undefined) {
+            let placeholder = fs.readdirSync(directoryPath).find(file =>path.parse(file).name == 'placeholder');
+            filePath = directoryPath + '/' + placeholder;
+        }else{
+            filePath= directoryPath + '/images/' + fileName;
+        }
+        
         var mimetype = mime.getType(filePath);
       
         res.setHeader('Content-disposition', 'attachment; filename=' + fileName);

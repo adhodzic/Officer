@@ -1,8 +1,21 @@
 const coreController = require("../Core/core-controller");
 const assetHelper = require("../../helpers/asset-agreement-helper");
 const path = require('path')
-const {createSignablePDF} = require('../../services/DocuSignAPI/docusign.js')
-exports.get = coreController.get
+const {createSignablePDF, makeRecipientViewRequest, getEnvelope} = require('../../services/DocuSignAPI/docusign.js')
+exports.get = coreController.get;
+exports.getDetails = function () {
+    return async(req, res) => {
+        const {id} = req.params;
+        const {userData} = req.body;
+        const assetAgreement = await assetHelper.getAssetAgreement(id, userData);
+        if(!assetAgreement) return res.status(403).json("Either you made the wrong request or you do not have rights for this action")
+        const envelope = await getEnvelope(null, assetAgreement.DocumentSignature)
+        return res.status(200).json({
+            assetAgreement,
+            envelope
+        })
+    };
+}
 exports.create = function(){ return async (req,res) =>{
     const {Assets, Reason, userData} = req.body;
     console.log('Create agreement')
@@ -59,8 +72,11 @@ exports.pdf = function(){
 exports.signPdf = function(){
     return async (req, res) => {
         const {id, userData} = req.body;
-        await assetHelper.updateReviewStatus(id,userData._id)
-
-        return res.status(200).json({"message":"OK"})
+        const assetAgreement = await assetHelper.getAssetAgreement(id, userData)
+        if(!assetAgreement) return res.status(400).json("You are not reviewer for requested asset agreement")
+        const data = await makeRecipientViewRequest(null,userData,assetAgreement,assetAgreement.DocumentSignature)
+        // await assetHelper.updateReviewStatus(id,userData._id)
+        console.log(data)
+        return res.status(200).json(data)
     }
 }

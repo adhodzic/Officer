@@ -12,6 +12,11 @@ router
     .delete(assetAgreementControler.delete('AssetAgreement'));
 
 router
+    .route("/asset-agreement/:id")
+    .all(verifyUser('AssetAgreement'))
+    .get(assetAgreementControler.getDetails())
+
+router
     .route("/asset-agreement/pdf")
     .get(assetAgreementControler.pdf());
 router

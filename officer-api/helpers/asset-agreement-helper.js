@@ -177,3 +177,35 @@ exports.updateReviewStatus = async function (assetAgreementId, userId) {
         await db.close();
     }
 };
+
+exports.getAssetAgreementForReviewer = async function(assetAgreementId, userData){
+    const db = await openConnection();
+    const getStmt = `SELECT aa.* FROM AssetAgreement aa
+                     JOIN AssetAgreementReviewer aar ON aar.AssetAgreementId = aa._id
+                     WHERE aa._id = ? AND  aar.ReviewerId = ?`;
+    try {
+        const data = await db.get(getStmt, [assetAgreementId, userData._id]);
+        return data;
+    } catch (err) {
+        console.log(err);
+        throw new HttpError(err, 500);
+    } finally {
+        await db.close();
+    }
+}
+
+exports.getAssetAgreement = async function(assetAgreementId, userData){
+    const db = await openConnection();
+    const getStmt = `SELECT aa.* FROM vw_AssetAgreementFull aa
+                     JOIN AssetAgreementReviewer aar ON aar.AssetAgreementId = aa._id
+                     WHERE aa._id = ? AND  aar.ReviewerId = ?`;
+    try {
+        const data = await db.get(getStmt, [assetAgreementId, userData._id]);
+        return data;
+    } catch (err) {
+        console.log(err);
+        throw new HttpError(err, 500);
+    } finally {
+        await db.close();
+    }
+}

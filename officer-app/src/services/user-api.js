@@ -1,4 +1,4 @@
-import axios from "./axios-with-auth";
+import axios from './Auth/axios-with-auth'
 
 const get = async function(){
     const res = await axios.get('/user')

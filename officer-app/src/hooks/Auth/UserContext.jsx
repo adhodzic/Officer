@@ -15,8 +15,7 @@ function isValidJSON(str) {
 
 const UserProvider = ({ children }) => {
   var navigate = useNavigate();
-  console.log("Get user from local storage")
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(-1);
   const [token, setToken] = useState(null);
   const rawUser = localStorage.getItem('user');
   const rawToken = localStorage.getItem('token');
@@ -47,12 +46,8 @@ const UserProvider = ({ children }) => {
     setUser(null)
     setToken(null)
   }
-
-  function isUserLoggedIn() {
-    return user ? true : false
-  }
   return (
-    <UserContext.Provider value={{ user, isUserLoggedIn, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout }}>
       {children}
     </UserContext.Provider>
   );

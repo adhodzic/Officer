@@ -12,19 +12,23 @@ function AssetAgreementDetails() {
     const [isLoadingAssets, setIsLoadingAssets] = useState(true);
     const [generalInfo, setGeneralInfo] = useState();
     const [assets, setAssets] = useState();
+    const [docStatus, setDocStatus] = useState();
     async function generateDoc() {
         console.log(p.id)
         await assetAgreementApi.pdf(p.id)
     }
     async function signDoc() {
-        await assetAgreementApi.signPdf(p.id)
+        const data = await assetAgreementApi.signPdf(p.id)
+        window.open(data.url,"_self")
+        console.log(data)
     }
     async function loadData() {
         setIsLoading(true)
         const data = await assetAgreementApi.get(p.id);
-        data[0].Reviewers = JSON.parse(data[0].Reviewers);
-        setGeneralInfo(data[0])
-        console.log(data[0])
+        data.assetAgreement.Reviewers = JSON.parse(data.assetAgreement.Reviewers);
+        setGeneralInfo(data.assetAgreement)
+        console.log(data.assetAgreement)
+        setDocStatus(data.envelope.status)
         setIsLoading(false)
     }
 
@@ -80,7 +84,7 @@ function AssetAgreementDetails() {
                                 <div className='row'>
                                     <FormGroup>
                                         <Form.Label>Status</Form.Label>
-                                        <Form.Control value={generalInfo.Status} type="text" disabled></Form.Control>
+                                        <Form.Control value={docStatus} type="text" disabled></Form.Control>
                                     </FormGroup>
                                 </div>
                             </div>
@@ -89,11 +93,11 @@ function AssetAgreementDetails() {
                                 {generalInfo.Assets.split(',').map((a, i) => {
                                     return <p key={i}><b>{a}</b></p>
                                 })}
-                                <h4>Reviewers</h4>
+                                {/* <h4>Status</h4> */}
 
-                                {generalInfo.Reviewers.map((a, i) => {
+                                {/* {generalInfo.Reviewers.map((a, i) => {
                                     return <p key={i}><b>{a.FullName}</b>{a.Signed ? ' Approved the document' : ' Pending document approval'}</p>
-                                })}
+                                })} */}
 
                             </div>
                         </div>

@@ -1,7 +1,8 @@
-import axios from './axios-with-auth'
+import axios from './Auth/axios-with-auth'
 
 const get = async function(id){
-    const res = await axios.get('/asset-agreement',{ params: { _id: id } })
+    const url = id? `/asset-agreement/${id}`:'/asset-agreement'
+    const res = await axios.get(url)
     return res.data
 }
 
@@ -34,8 +35,8 @@ const pdf = async function(id){
 }
 
 const signPdf = async function(id){
-    const data = axios.post('/asset-agreement/sign',{id});
-
+    const data = await axios.post('/asset-agreement/sign',{id});
+    return data.data
 }
 
 

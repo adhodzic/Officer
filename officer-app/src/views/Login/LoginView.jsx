@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from 'react'
 import {Form, Button} from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../hooks/Auth/UserContext'
-import auth from '../../services/auth-api'
+import auth from '../../services/Auth/auth-api'
 import './AuthForms.scss'
 function LoginView() {
     const navigate = useNavigate()
-    const {login,isUserLoggedIn} = useContext(UserContext)
+    const {login,user} = useContext(UserContext)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     async function loginUser(){
@@ -16,7 +16,7 @@ function LoginView() {
         navigate('/')
     }
     useEffect(()=>{
-        if(isUserLoggedIn()){
+        if(user){
             navigate('/')
         }
     })

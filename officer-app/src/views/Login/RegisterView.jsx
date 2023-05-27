@@ -2,7 +2,7 @@ import { useContext, useState } from 'react'
 import {Form, Button} from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../hooks/Auth/UserContext'
-import auth from '../../services/auth-api'
+import auth from '../../services/Auth/auth-api'
 import './AuthForms.scss'
 function RegisterView() {
     const navigate = useNavigate()
