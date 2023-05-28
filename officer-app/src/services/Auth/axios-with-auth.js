@@ -4,7 +4,7 @@ function getToken(){
 }
 
 const instance = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: import.meta.env.VITE_BASE_URL + '/api',
 })
 
 instance.interceptors.request.use(function (config) {
