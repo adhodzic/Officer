@@ -1,6 +1,7 @@
 const coreController = require("../Core/core-controller");
 const assetHelper = require("../../helpers/asset-agreement-helper");
 const path = require('path')
+const fs = require('fs')
 const {createSignablePDF, makeRecipientViewRequest, getEnvelope} = require('../../services/DocuSignAPI/docusign.js')
 exports.get = coreController.get;
 exports.getDetails = function () {
@@ -28,7 +29,7 @@ exports.create = function(){ return async (req,res) =>{
             Address: userData.Address,
             Assets: Assets
         }
-        const reviewers = await assetHelper.getReviewersForAgreement();
+        const reviewers = await assetHelper.getAllReviewers();
         //Check if user who initiated agreement is one of the reviewers. If not add it.
         if(!reviewers.some((reviewer)=>{return reviewer._id == userData._id})){
             reviewers.push({_id: userData._id,Email:userData.Email, FullName: userData.FullName, Position: userData.Position})
@@ -51,20 +52,28 @@ exports.delete = coreController.delete
 exports.pdf = function(){
     return async (req, res) => {
         const {_id} = req.query;
-        
         const data = await assetHelper.getDataForPDF(_id);
 
-        if(data.DocumentURL == ''){
-            const pdfData = await assetHelper.generatePDFFromData(data)
+        if(data.DocumentURL == '' || !fs.existsSync(data.DocumentURL)){
+            const assetAgreementObj = {
+                Name:data.Name,
+                FullName: data.FullName,
+                OIB: data.OIB,
+                Address: data.Address,
+                Assets: data.Assets.split(',').map((asset)=>{
+                    return {Name: asset}
+                })
+            }
+            const reviewers = await assetHelper.getReviewersForAssetAgreement(_id)
+            const pdfData = await assetHelper.generatePDFFromData(assetAgreementObj,reviewers)
             console.log(pdfData)
             req.body.URL = pdfData.path;
             await assetHelper.updateDocumentURL(pdfData.path, _id);
         }
         
         var filePath = data.DocumentURL || req.body.URL
-        console.log(data, data.DocumentURL)
         var fileName = path.basename(filePath);
-    
+
         res.setHeader('Content-type', 'application/pdf');
         res.download(filePath,fileName)
     }

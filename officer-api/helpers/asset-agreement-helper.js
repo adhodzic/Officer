@@ -148,12 +148,28 @@ exports.createReviewersForAgreement = async function (assetAgreementId, reviewer
     return reviewers;
 };
 
-exports.getReviewersForAgreement = async function () {
+exports.getAllReviewers = async function () {
     const db = await openConnection();
     const reviewersStmt = "SELECT _id, FullName, Email, Position FROM vw_UserRole WHERE IsReviewer = 1"
         try {
             const db = await openConnection();
             const reviewers = await db.all(reviewersStmt, []);
+            return reviewers || []
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(err);
+        }finally{
+            await db.close();
+        }
+};
+exports.getReviewersForAssetAgreement = async function (assetAgreementId) {
+    const db = await openConnection();
+    const reviewersStmt = `SELECT u._id, u.FullName, u.Email, u.Position FROM AssetAgreementReviewer aar
+                           JOIN vw_UserRole u ON u._id = aar.ReviewerId
+                           WHERE AssetAgreementId = ?`
+        try {
+            const db = await openConnection();
+            const reviewers = await db.all(reviewersStmt, [assetAgreementId]);
             return reviewers || []
         } catch (err) {
             console.log(err);

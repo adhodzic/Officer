@@ -12,13 +12,15 @@ router
     .delete(assetAgreementControler.delete('AssetAgreement'));
 
 router
-    .route("/asset-agreement/:id")
+    .route("/asset-agreement/details/:id")
     .all(verifyUser('AssetAgreement'))
-    .get(assetAgreementControler.getDetails())
+    .get(assetAgreementControler.getDetails());
 
 router
     .route("/asset-agreement/pdf")
+    .all(verifyUser('AssetAgreement'))
     .get(assetAgreementControler.pdf());
+    
 router
     .route("/asset-agreement/sign")
     .all(verifyUser('AssetAgreement'))

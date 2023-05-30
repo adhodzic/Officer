@@ -1,7 +1,7 @@
 import axios from './Auth/axios-with-auth'
 
 const get = async function(id){
-    const url = id? `/asset-agreement/${id}`:'/asset-agreement'
+    const url = id? `/asset-agreement/details/${id}`:'/asset-agreement'
     const res = await axios.get(url)
     return res.data
 }
