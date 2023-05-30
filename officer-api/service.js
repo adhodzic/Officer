@@ -13,7 +13,7 @@ const assetAgreementRouter = require('./routes/asset-agreement-routes.js');
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: '*',
     credentials: true,
     exposedHeaders: 'Content-Disposition'
   }));
