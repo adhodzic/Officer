@@ -6,7 +6,7 @@ const docusign = require("docusign-esign");
 const path = require("path");
 const { dsConfig } = require("./dsConfig");
 const {getSigners} = require("./docusing-helper.js");
-exports.createSignablePDF = async function(currentUser, pdfPath, signers, assetAgreement) {
+async function createSignablePDF(currentUser, pdfPath, signers, assetAgreement) {
     const tokenObj = new DSToken();
     const token = await tokenObj.getToken();
 
@@ -35,7 +35,7 @@ async function makeRecipientViewRequest(envelopesApi, currentUser,assetAgreement
     
     }
     let viewRequest = new docusign.RecipientViewRequest();
-    viewRequest.returnUrl = `http://localhost:5173/asset-agreements/details/${assetAgreement._id}`;
+    viewRequest.returnUrl = process.env.APP_URL + `/asset-agreements/details/${assetAgreement._id}`;
 
     viewRequest.authenticationMethod = 'none';
     
@@ -101,5 +101,6 @@ async function getEnvelope(envelopesApi, envelopeId){
 
 module.exports = {
     makeRecipientViewRequest,
-    getEnvelope
+    getEnvelope,
+    createSignablePDF
 }
