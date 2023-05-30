@@ -18,7 +18,7 @@ async function createSignablePDF(currentUser, pdfPath, signers, assetAgreement) 
     let envelope = makeEnvelope(pdfPath,signers,assetAgreement);
 
     const envelopeData = await envelopesApi.createEnvelope(dsConfig.accountId, { envelopeDefinition: envelope });
-    const results = makeRecipientViewRequest(envelopesApi,currentUser,assetAgreement, envelopeData.envelopeId)
+    const results = await makeRecipientViewRequest(envelopesApi,currentUser,assetAgreement, envelopeData.envelopeId)
 
     return {envelopeId: envelopeData.envelopeId, envelopeUrl: results.url};
 }
