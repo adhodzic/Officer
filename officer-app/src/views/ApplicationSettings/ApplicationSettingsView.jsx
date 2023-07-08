@@ -3,6 +3,9 @@ import './ApplicationSettings.scss'
 import ReviewersTable from './Components/ReviewersTable'
 import userApi from '../../services/user-api'
 import { Button, Modal } from 'react-bootstrap'
+import CompanyInfo from './Components/CompanyInfo'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 function ApplicationSettings() {
     const [selectedReviewers, setSelectedReviewers] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
@@ -10,43 +13,47 @@ function ApplicationSettings() {
     const [loading, setLoading] = useState(true)
     const [reviewers, setReviewers] = useState([]);
     function handleClose(submit) {
-        if(!submit) return setShow(false)
-        const userIds = selectedReviewers.map((row)=>{
+        if (!submit) return setShow(false)
+        const userIds = selectedReviewers.map((row) => {
             return row.original._id
         }).join(',')
         updateReviewers(userIds, true)
         setShow(false)
     }
-    async function updateReviewers(userIds, isReviewer){
+    async function updateReviewers(userIds, isReviewer) {
         userApi.updateReviewers(userIds, isReviewer)
     }
-    async function getData(){
+    async function getData() {
         const data = await userApi.getReviewers()
         setReviewers(data);
-        setSelectedIds(data.map((reviewer)=>{
+        setSelectedIds(data.map((reviewer) => {
             return reviewer._id
         }))
         setLoading(false);
     }
-    useEffect(()=>{
+    useEffect(() => {
         getData();
-    },[])
+    }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         // setReviewers(selectedReviewers)
-    },[selectedReviewers])
+    }, [selectedReviewers])
     return (
         <div className="ApplicationSettings">
+            <CompanyInfo></CompanyInfo>
+            <div className="title-container">
+                <h4>Contract Reviewers</h4>
+                <button onClick={() => setShow(true)} className="edit-button">
+                    <FontAwesomeIcon icon={faPenToSquare}></FontAwesomeIcon>
+                </button>
+            </div>
             {!loading && (
                 <>
-                <ul>
-                    {reviewers.map((reviewer => {
-                        return <li key={reviewer._id}>{reviewer.FullName}</li>
-                    }))}
-                </ul>
+                        {reviewers.map((reviewer => {
+                            return reviewer.FullName
+                        })).join(",")}
                 </>
             )}
-            <Button onClick={() => setShow(true)} >Edit reviewers</Button>
             <Modal show={show} onHide={handleClose} backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title>
@@ -59,7 +66,7 @@ function ApplicationSettings() {
                 <Modal.Footer>
                     <Button
                         variant="secondary"
-                        onClick={()=>handleClose(false)}
+                        onClick={() => handleClose(false)}
                     >
                         Close
                     </Button>

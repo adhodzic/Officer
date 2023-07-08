@@ -9,7 +9,7 @@ const userRouter = require('./routes/user-routes.js');
 const assetRouter = require('./routes/asset-routes.js');
 const employeeRouter = require('./routes/employee-routes.js');
 const assetAgreementRouter = require('./routes/asset-agreement-routes.js');
-
+const appSettingsRouter = require('./routes/application-settings-routes.js');
 const app = express();
 
 app.use(cors({
@@ -18,7 +18,7 @@ app.use(cors({
     exposedHeaders: 'Content-Disposition'
   }));
 app.use(bodyParser.json());
-app.use('/api',[authRouter,userRouter, assetRouter, employeeRouter,assetAgreementRouter]);
+app.use('/api',[authRouter,userRouter, assetRouter, employeeRouter,assetAgreementRouter,appSettingsRouter]);
 
 const port = process.env.PORT || 5001;
 

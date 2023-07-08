@@ -40,6 +40,14 @@ const UserProvider = ({ children }) => {
     clearUserAndToken()
   }
 
+  function validatePrivilages(privilages){
+    if(user != -1){
+      console.log(user)
+      return privilages.some((p)=>p.toLowerCase() == user.RoleName.toLowerCase())
+    }
+    return false
+  }
+
   function clearUserAndToken() {
     localStorage.removeItem('user')
     localStorage.removeItem('token')
@@ -47,7 +55,7 @@ const UserProvider = ({ children }) => {
     setToken(null)
   }
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, validatePrivilages }}>
       {children}
     </UserContext.Provider>
   );

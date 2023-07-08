@@ -4,8 +4,8 @@ import '../AssetAgreementView.scss'
 import { NavLink  } from "react-router-dom"
 import BLink from "react-bootstrap/NavLink";
 import AssetAgreementApi from '../../../services/asset-agreement-api'
-
-function AssetAgreementTable() {
+import loader from '../../../assets/loader.svg'
+function AssetAgreementTable({actionBar, details, status, title = 'Asset Agreements'}) {
   const [AssetAgreements, setAssetAgreements] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -13,7 +13,7 @@ function AssetAgreementTable() {
   const loadData = async function () {
     try {
       setLoading(true)
-      const apiData = await AssetAgreementApi.get();
+      const apiData = await AssetAgreementApi.get(null, status);
       setAssetAgreements(apiData);
     } catch (error) {
       console.log(error)
@@ -35,11 +35,11 @@ function AssetAgreementTable() {
       },
       {
         Header: "Reason",
-        accessor: "Reason",
+        accessor: "Reason"
       },
       {
-        Header: "DocumentURL",
-        accessor: "DocumentURL",
+        Header: "Status",
+        accessor: "Status"
       }
     ],
     []
@@ -52,22 +52,24 @@ function AssetAgreementTable() {
     Reason: {
       ControlType: "Text",
       Required: true
-    },
-    DocumentURL: {
-      ControlType: "Text",
-      Required: true
     }
   }
   return (
-    <>
+    <div className="asset-agremment-wrap">
+      <h3>{title}</h3>
       {!loading && AssetAgreements !== null &&
         (
           <>
-            <CoreTable details={true} createFormConf={AssetAgreementConf} apiService={AssetAgreementApi} setData={setAssetAgreements} data={AssetAgreements} columns={columns} title={'AssetAgreements'}></CoreTable>
+            <CoreTable actionBar={actionBar} details={details} createFormConf={AssetAgreementConf} apiService={AssetAgreementApi} setData={setAssetAgreements} data={AssetAgreements} columns={columns}></CoreTable>
           </>
-        )
+        ) ||
+        <div className="loader">
+            <div className="spinner">
+              <img src={loader} alt="loading..."></img>
+            </div>
+        </div>
       }
-    </>
+    </div>
   );
 }
 

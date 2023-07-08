@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.scss";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import AssetView from "./views/Assets/AssetView";
 import EmployeeView from "./views/Employees/EmployeeView"
 import AppLayout from "./AppLayout";
@@ -14,6 +18,7 @@ import NewRequest from "./views/AssetAgreements/NewRequest";
 import AssetAgreementDetails from "./views/AssetAgreements/AssetAgreementDetails";
 import UserSettingsView from "./views/UserSettings/UserSettingsView";
 import ApplicationSettingsView from "./views/ApplicationSettings/ApplicationSettingsView"
+import DashboardView from "./views/Dashboard/DashboardView";
 function App() {
   return (
     <div className="App">
@@ -23,6 +28,8 @@ function App() {
           <Route path="register" element={<RegisterView />}></Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/" exact element={<AppLayout />}>
+              <Route path="/" element={<Navigate to="/dashboard" replace></Navigate>}></Route>
+              <Route path="dashboard" element={<DashboardView/>}></Route>
               <Route path="new-user-agreement" element={<NewRequest />}></Route>
               <Route path="assets" element={<AssetView />}></Route>
               <Route path="employees" element={<EmployeeView />}></Route>
@@ -35,6 +42,7 @@ function App() {
           </Route>
         </Routes>
       </UserProvider>
+      <ToastContainer />
     </div>
   );
 }

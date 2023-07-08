@@ -16,7 +16,7 @@ router.route("/user/reviewers")
     .put(userControler.updateReviewers());
 
 router.route("/user/image")
-    .all(verifyUser('User'))
+    .all(verifyUser('UserSettings'))
     .get(userControler.getImage())
     .post(userControler.uploadImage(), userControler.postUploadImage())
     

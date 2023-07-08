@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { UserContext } from "../../hooks/Auth/UserContext";
 import './AssetAgreementView.scss'
 import { useNavigate } from 'react-router-dom'
+import loader from '../../assets/loader.svg'
 function NewRequest() {
     const navigate = useNavigate()
     const { user } = useContext(UserContext);
@@ -13,6 +14,7 @@ function NewRequest() {
     const [show, setShow] = useState(false)
     const [reason, setReason] = useState()
     const [assetValidation, setAssetValidation] = useState(false)
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         if (!assetValidation) {
             return
@@ -26,6 +28,7 @@ function NewRequest() {
     }
     async function createRequest(e) {
         e.preventDefault()
+        setLoading(true)
         if (selectedAssets.length <= 0) {
             setAssetValidation(true);
             return
@@ -38,13 +41,17 @@ function NewRequest() {
             Assets: assets
         }
         const data = await assetAgreementApi.create(newAgrement)
+        setLoading(false)
         console.log(data.scope,data.scope?.["lastID"])
-        if(!data?.scope?.lastID > 0) return
-        window.open(data.envelopeUrl, '_blank').focus();
+        if(data?.scope?.lastID <= 0) return
+        // window.open(data.envelopeUrl, '_blank').focus();
         navigate(`/asset-agreements/details/${data.scope.lastID}`)
     }
     return (
         <div className='NewRequest'>
+            {loading && <div className="spinner">
+              <img src={loader} alt="loading..."></img>
+            </div>}
             <h1>New asset request</h1>
             <Form onSubmit={createRequest}>
                 <div className="row">

@@ -33,7 +33,7 @@ exports.authentication = function () {
                 if(employeeId === undefined) throw new HttpError(`Could not find employee with email: ${email}`, 401);
                 userData = await createUser(email, password, employeeId, 'EMPLOYEE')
             }
-            const userFullData = await getUserFromDb(email);
+            const userFullData = await getUserFromDb(email,true);
             const newToken = await authHelper.compareAndCreateToken(
                 userFullData,
                 password,

@@ -83,6 +83,28 @@ exports.delete = function (object){
             return res.status(200).json(rows || {});
         } catch (err) {
             console.log(err);
+            if(err.errno == 19){
+                return res.status(400).json("Error while deleting");
+            }
+            return res.status(500).json(err);
+        }
+    };
+}
+
+exports.deleteSoft = function (object){
+    return async (req, res) => {
+        const _ids = req.body.data;
+        const sql = `UPDATE ${object} SET Active = 0 WHERE _id IN (${_ids})`;
+        try {
+            const db = await openConnection();
+            const rows = await db.run(sql, []);
+            db.close();
+            return res.status(200).json(rows || {});
+        } catch (err) {
+            console.log(err);
+            if(err.errno == 19){
+                return res.status(400).json("Error while deleting");
+            }
             return res.status(500).json(err);
         }
     };

@@ -10,3 +10,5 @@ router
     .post(applicationSettingsController.create('ApplicationSettings'))
     .put(applicationSettingsController.update('ApplicationSettings'))
     .delete(applicationSettingsController.delete('ApplicationSettings'));
+
+module.exports = router

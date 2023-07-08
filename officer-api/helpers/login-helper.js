@@ -27,8 +27,8 @@ const getEmployeeByEmail = async function (email) {
     return employeData;
 };
 
-const getUserFromDb = async function (Username) {
-    const sql = `SELECT * FROM vw_UserRole WHERE Username = '${Username}'`;
+const getUserFromDb = async function (Username, privilages=false) {
+    const sql = `SELECT * FROM vw_UserRole${privilages?'Privilages':''} WHERE Username = '${Username}'`;
     const db = await openConnection();
     const userData = await db.get(sql, []);
     db.close();

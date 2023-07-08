@@ -28,7 +28,7 @@ function AssetAgreementDetails() {
         data.assetAgreement.Reviewers = JSON.parse(data.assetAgreement.Reviewers);
         setGeneralInfo(data.assetAgreement)
         console.log(data.assetAgreement)
-        setDocStatus(data.envelope.status)
+        setDocStatus(data.envelope?.status || "Unavailable")
         setIsLoading(false)
     }
 
@@ -103,7 +103,7 @@ function AssetAgreementDetails() {
                         </div>
                     </Form>
                     {<Button type='button' onClick={() => generateDoc()}>Download document</Button>}
-                    {<Button type='button' onClick={() => signDoc()}>E-sign document</Button>}
+                    {docStatus != "Unavailable" && <Button type='button' onClick={() => signDoc()}>E-sign document</Button>}
                 </>
             )
 

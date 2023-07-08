@@ -1,7 +1,6 @@
 import { forwardRef, useState, useRef, useEffect } from "react";
 import { useTable, useRowSelect, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import { Button, Modal, Nav } from "react-bootstrap";
 import BTable from 'react-bootstrap/Table'
 import './CoreTable.scss'
@@ -134,7 +133,7 @@ function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title
         setData(null)
     }
     return (
-        <>
+        <div className="CoreTable">
             <CoreModal handleClose={handleClose} modalProp={createFormConf} isInEdit={false} show={show} apiService={apiService} title={title}></CoreModal>
             <div className="table-title">
                 <h3>{title}</h3>
@@ -205,7 +204,7 @@ function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </>
+        </div>
     );
 }
 CoreTable.defaultProps = {

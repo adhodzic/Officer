@@ -5,47 +5,74 @@ const DSToken = require("./DSToken");
 const docusign = require("docusign-esign");
 const path = require("path");
 const { dsConfig } = require("./dsConfig");
-const {getSigners} = require("./docusing-helper.js");
-async function createSignablePDF(currentUser, pdfPath, signers, assetAgreement) {
+const { getSigners } = require("./docusing-helper.js");
+async function createSignablePDF(
+    currentUser,
+    pdfPath,
+    signers,
+    assetAgreement
+) {
     const tokenObj = new DSToken();
     const token = await tokenObj.getToken();
-
+    console.log("Signers: ",signers)
     const dsApiClient = new docusign.ApiClient();
     dsApiClient.setBasePath(dsConfig.dsApiBasePath);
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + token);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
-    let envelope = makeEnvelope(pdfPath,signers,assetAgreement);
+    let envelope = makeEnvelope(pdfPath, signers, assetAgreement);
 
-    const envelopeData = await envelopesApi.createEnvelope(dsConfig.accountId, { envelopeDefinition: envelope });
-    const results = await makeRecipientViewRequest(envelopesApi,currentUser,assetAgreement, envelopeData.envelopeId)
+    const envelopeData = await envelopesApi.createEnvelope(dsConfig.accountId, {
+        envelopeDefinition: envelope,
+    });
+    const results = await makeRecipientViewRequest(
+        envelopesApi,
+        currentUser,
+        assetAgreement,
+        envelopeData.envelopeId
+    );
 
-    return {envelopeId: envelopeData.envelopeId, envelopeUrl: results.url};
+    return { envelopeId: envelopeData.envelopeId, envelopeUrl: results?.url };
 }
 
-async function makeRecipientViewRequest(envelopesApi, currentUser,assetAgreement, envelopeId) {
-    if(!envelopesApi){
+async function makeRecipientViewRequest(
+    envelopesApi,
+    currentUser,
+    assetAgreement,
+    envelopeId
+) {
+    if (!envelopesApi) {
         const tokenObj = new DSToken();
         const token = await tokenObj.getToken();
-    
+
         const dsApiClient = new docusign.ApiClient();
         dsApiClient.setBasePath(dsConfig.dsApiBasePath);
         dsApiClient.addDefaultHeader("Authorization", "Bearer " + token);
         envelopesApi = new docusign.EnvelopesApi(dsApiClient);
-    
     }
-    let viewRequest = new docusign.RecipientViewRequest();
-    viewRequest.returnUrl = process.env.APP_URL + `/asset-agreements/details/${assetAgreement._id}`;
-
-    viewRequest.authenticationMethod = 'none';
+    try{
+        let viewRequest = new docusign.RecipientViewRequest();
+        viewRequest.returnUrl =
+            process.env.APP_URL + `/asset-agreements/details/${assetAgreement._id}`;
     
-    viewRequest.email = currentUser.Email;
-    viewRequest.userName = currentUser.FullName;
-    viewRequest.clientUserId = currentUser._id;
+        viewRequest.authenticationMethod = "none";
+    
+        viewRequest.email = currentUser.Email;
+        viewRequest.userName = currentUser.FullName;
+        viewRequest.clientUserId = currentUser._id;
+        console.log("CurrentUser: ",currentUser)
+        console.log("ViewRequest: ",viewRequest)
+        results = await envelopesApi.createRecipientView(
+            dsConfig.accountId,
+            envelopeId,
+            { recipientViewRequest: viewRequest }
+        );
+        return results;
+    }catch(err){
+        console.log("Something went wrong")
+        return null;
+    }
 
-    results = await envelopesApi.createRecipientView(dsConfig.accountId, envelopeId,
-        {recipientViewRequest: viewRequest});
-    return results
 }
 
 function makeEnvelope(pdfPath, signers, assetAgreement) {
@@ -69,7 +96,7 @@ function makeEnvelope(pdfPath, signers, assetAgreement) {
     env.documents = [doc1];
 
     const signersObjArr = getSigners(signers);
-    console.log(signersObjArr)
+    console.log("SignersObj: ",signersObjArr);
     // Add the recipient to the envelope object
     let recipients = docusign.Recipients.constructFromObject({
         signers: signersObjArr,
@@ -83,24 +110,37 @@ function makeEnvelope(pdfPath, signers, assetAgreement) {
     return env;
 }
 
-async function getEnvelope(envelopesApi, envelopeId){
-    console.log(envelopeId)
-    if(!envelopesApi){
-        const tokenObj = new DSToken();
-        const token = await tokenObj.getToken();
+async function getEnvelope(envelopesApi, envelopeId) {
+    console.log(envelopeId);
+        if (!envelopesApi) {
+            const tokenObj = new DSToken();
+            const token = await tokenObj.getToken();
     
-        const dsApiClient = new docusign.ApiClient();
-        dsApiClient.setBasePath(dsConfig.dsApiBasePath);
-        dsApiClient.addDefaultHeader("Authorization", "Bearer " + token);
-        envelopesApi = new docusign.EnvelopesApi(dsApiClient);
+            const dsApiClient = new docusign.ApiClient();
+            dsApiClient.setBasePath(dsConfig.dsApiBasePath);
+            dsApiClient.addDefaultHeader("Authorization", "Bearer " + token);
+            envelopesApi = new docusign.EnvelopesApi(dsApiClient);
+        }
     
-    }
+        return await envelopesApi.getEnvelope(dsConfig.accountId, envelopeId);
+}
+async function getEnvelopesForUser(envelopeIds) {
+    const tokenObj = new DSToken();
+    const token = await tokenObj.getToken();
 
-    return await envelopesApi.getEnvelope(dsConfig.accountId,envelopeId);
+    const dsApiClient = new docusign.ApiClient();
+    dsApiClient.setBasePath(dsConfig.dsApiBasePath);
+    dsApiClient.addDefaultHeader("Authorization", "Bearer " + token);
+    envelopesApi = new docusign.EnvelopesApi(dsApiClient);
+    const options = {envelopeIds}
+
+    const envelopes = await envelopesApi.listStatusChanges(dsConfig.accountId, options);
+    return envelopes
 }
 
 module.exports = {
     makeRecipientViewRequest,
     getEnvelope,
-    createSignablePDF
-}
+    getEnvelopesForUser,
+    createSignablePDF,
+};

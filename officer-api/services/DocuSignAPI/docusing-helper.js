@@ -2,6 +2,7 @@ const docusign = require("docusign-esign");
 
 exports.getSigners = function(signers){
     return signers.map(signer => {
+        console.log(signer)
         const signerObj = docusign.Signer.constructFromObject({
             email: signer.Email,
             name: signer.FullName,

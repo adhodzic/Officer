@@ -6,15 +6,15 @@ function assetList(assets){
     }).join('\n')
 }
 
-exports.assetAgreement = function(user, agreement, assets, reviewers, title, foot){
+exports.assetAgreement = function(user, company, agreement, assets, reviewers, title, foot){
     return `
     <div>
         ${header(title)}
         <div>
             <div style="text-align:center;">
             <p>
-            <b>Neka tvrtka d.o.o.,</b> Neka adresa 15B, Pula,
-            OIB: 21313543842, (u daljnjem tekstu Poslodavac)
+            <b>${company.Name},</b> ${company.Address},
+            OIB: ${company.OIB}, (u daljnjem tekstu Poslodavac)
             </p></br>
             <p>i</p></br>
             <p>

@@ -1,8 +1,8 @@
 import axios from './Auth/axios-with-auth'
 
-const get = async function(id){
+const get = async function(id, status){
     const url = id? `/asset-agreement/details/${id}`:'/asset-agreement'
-    const res = await axios.get(url)
+    const res = await axios.get(url,{params:{status:true}})
     return res.data
 }
 

@@ -27,7 +27,7 @@ exports.createAssetAgreement = async function (
         return scope;
     } catch (err) {
         console.log(err);
-        return null;
+        throw new HttpError("Database failed",500);
     } finally {
         db.close();
     }
@@ -59,7 +59,8 @@ exports.updateDocumentURL = async function (url, id) {
     }
 };
 
-exports.generatePDFFromData = async function (data, reviewers) {
+exports.generatePDFFromData = async function (data, company, reviewers) {
+    console.log("Reviewers",reviewers)
     const user = {
         FullName: data.FullName,
         OIB: data.OIB,
@@ -71,6 +72,7 @@ exports.generatePDFFromData = async function (data, reviewers) {
 
     const html = assetAgreement(
         user,
+        company,
         agreement,
         data.Assets,
         reviewers,
@@ -111,7 +113,7 @@ exports.createAssetsForAgreement = async function (assetAgreementId, assets) {
 
 exports.assignEnvelopeToAssetAgreement = async function (envelopeId, assetAgreementId){
     const db = await openConnection();
-    const insertStmt = `UPDATE AssetAgreement SET DocumentSignature = ? WHERE _id = ?`;
+    const insertStmt = `UPDATE AssetAgreement SET DocumentGUID = ? WHERE _id = ?`;
     try{
         await db.run(insertStmt, [envelopeId, assetAgreementId]);
     }
@@ -217,6 +219,34 @@ exports.getAssetAgreement = async function(assetAgreementId, userData){
                      WHERE aa._id = ? AND  aar.ReviewerId = ?`;
     try {
         const data = await db.get(getStmt, [assetAgreementId, userData._id]);
+        return data;
+    } catch (err) {
+        console.log(err);
+        throw new HttpError(err, 500);
+    } finally {
+        await db.close();
+    }
+}
+
+exports.getAllAssetAgreements = async function(){
+    const db = await openConnection();
+    const getStmt = `SELECT * FROM vw_AssetAgreementFull`;
+    try {
+        const data = await db.all(getStmt);
+        return data;
+    } catch (err) {
+        console.log(err);
+        throw new HttpError(err, 500);
+    } finally {
+        await db.close();
+    }
+}
+
+exports.getCompanyInfo = async function(){
+    const db = await openConnection();
+    const getStmt = `SELECT Value FROM ApplicationSettings WHERE Name = 'CompanyInfo'`;
+    try {
+        const data = await db.get(getStmt);
         return data;
     } catch (err) {
         console.log(err);

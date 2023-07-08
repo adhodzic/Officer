@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios'
+import { showToast } from '../../views/ApplicationSettings/Components/ToastUtils';
 function getToken(){
     return JSON.parse(localStorage.getItem('token'))
 }
-
 const instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL + '/api',
 })
@@ -18,7 +18,6 @@ instance.interceptors.request.use(function (config) {
     config.headers.Authorization = `Bearer ${token}`
     return config;
   }, function (error) {
-    console.log(error)
     return Promise.reject(error);
   });
 
@@ -29,6 +28,8 @@ instance.interceptors.request.use(function (config) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       window.location.href = window.location.origin + '/login'
+    }else if(error.response?.status == 400){
+      showToast(error.response.data,{type: "error"})
     }
     return Promise.reject(error);
   });
