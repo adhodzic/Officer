@@ -60,7 +60,6 @@ exports.updateDocumentURL = async function (url, id) {
 };
 
 exports.generatePDFFromData = async function (data, company, reviewers) {
-    console.log("Reviewers",reviewers)
     const user = {
         FullName: data.FullName,
         OIB: data.OIB,
@@ -86,7 +85,6 @@ exports.generatePDFFromData = async function (data, company, reviewers) {
 };
 
 exports.createAssetsForAgreement = async function (assetAgreementId, assets) {
-    console.log(assetAgreementId, assets);
     if (!assetAgreementId || !assets.length > 0)
         throw new HttpError("AssetAgreement missis parameters", 500);
     const insertStmt = `INSERT INTO AssetAgreementAsset(AssetAgreementId, AssetId) VALUES(?,?);`;
@@ -97,7 +95,6 @@ exports.createAssetsForAgreement = async function (assetAgreementId, assets) {
         await db.run("BEGIN TRANSACTION");
         await Promise.all(
             values.map(async (element) => {
-                console.log(element);
                 await db.run(insertStmt, element);
             })
         );
@@ -136,7 +133,6 @@ exports.createReviewersForAgreement = async function (assetAgreementId, reviewer
     try{
         await Promise.all(
             values.map(async (element) => {
-                console.log(element);
                 await db.run(insertStmt, element);
             })
         );
@@ -219,6 +215,21 @@ exports.getAssetAgreement = async function(assetAgreementId, userData){
                      WHERE aa._id = ? AND  aar.ReviewerId = ?`;
     try {
         const data = await db.get(getStmt, [assetAgreementId, userData._id]);
+        return data;
+    } catch (err) {
+        console.log(err);
+        throw new HttpError(err, 500);
+    } finally {
+        await db.close();
+    }
+}
+exports.getAssetAgreementsForUser = async function(userData){
+    const db = await openConnection();
+    const getStmt = `SELECT aa.* FROM vw_AssetAgreementFull aa
+                     JOIN AssetAgreementReviewer aar ON aar.AssetAgreementId = aa._id
+                     WHERE aar.ReviewerId = ?`;
+    try {
+        const data = await db.all(getStmt, [userData._id]);
         return data;
     } catch (err) {
         console.log(err);

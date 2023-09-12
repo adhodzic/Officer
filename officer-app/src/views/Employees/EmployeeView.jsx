@@ -6,7 +6,7 @@ function EmployeeView() {
     return (
         <div className='EmployeeView'>
             <div className='employee-table'>
-                <EmployeeTable></EmployeeTable>
+                <EmployeeTable title={"Employee"}></EmployeeTable>
             </div>
         </div>
     )

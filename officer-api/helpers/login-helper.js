@@ -1,12 +1,10 @@
 const openConnection = require("../services/database");
 const authHelper = require("../helpers/authentication-helper")
 const userExists = async function(username){
-    console.log("Check")
     const sql = `SELECT COUNT(1) as count FROM User WHERE Username = '${username}'`;
     const db = await openConnection();
     const userData = await db.get(sql, []);
     await db.close();
-    console.log(userData.count)
     return userData.count > 0?true:false;
 }
 

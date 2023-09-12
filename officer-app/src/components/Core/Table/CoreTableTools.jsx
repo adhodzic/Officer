@@ -1,15 +1,17 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons'
-
-
 import './CoreTable.scss'
 
-function CoreTableTools({create, remove}) {
-
+function CoreTableTools({crudPrivilages,create, remove}) {
+    
     return (
         <div className='ToolBar'>
-            <FontAwesomeIcon onClick={create} icon={faPlusCircle} />
-            <FontAwesomeIcon onClick={remove}icon={faMinusCircle} />
+            { crudPrivilages && crudPrivilages.includes('CREATE') && 
+                <FontAwesomeIcon onClick={create} icon={faPlusCircle} />
+            }
+            { crudPrivilages && crudPrivilages.includes('DELETE') && 
+                 <FontAwesomeIcon onClick={remove}icon={faMinusCircle} />
+            }   
         </div>
     )
 }

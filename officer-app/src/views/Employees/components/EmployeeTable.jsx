@@ -4,7 +4,7 @@ import "../EmployeeView.scss";
 
 import employeeApi from '../../../services/employee-api'
 
-function EmployeeTable() {
+function EmployeeTable({hasCheckbox, selectedEmployee, setSelectedEmployee, actionBar, title}) {
   const [employees, setEmployees] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -48,26 +48,32 @@ function EmployeeTable() {
   );
   const employeeConf = {
     FullName: {
+      Name: 'Full Name',
       ControlType: "Text",
       Required: true
     },
     Position: {
+      Name: 'Position',
       ControlType: "Text",
       Required: true
     },
     DOB: {
+      Name: 'DOB',
       ControlType: "Date",
       Required: true
     },
     Email: {
+      Name: 'Email',
       ControlType: "Text",
       Required: true
     },
     Address: {
+      Name: 'Address',
       ControlType: "Text",
       Required: true
     },
     OIB: {
+      Name: 'OIB',
       ControlType: "Text",
       Required: true
     }
@@ -77,7 +83,7 @@ function EmployeeTable() {
       {!loading && employees !== null &&
         (
           <>
-            <CoreTable createFormConf={employeeConf} apiService={employeeApi} setData={setEmployees} data={employees} columns={columns} title={'Employees'}></CoreTable>
+            <CoreTable objectName={"Employee"} hasCheckbox={hasCheckbox} selRows={selectedEmployee} setSelRows={setSelectedEmployee} actionBar={actionBar} createFormConf={employeeConf} apiService={employeeApi} setData={setEmployees} data={employees} columns={columns} title={title}></CoreTable>
           </>
         )
       }

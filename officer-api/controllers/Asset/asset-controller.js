@@ -5,7 +5,7 @@ exports.get = function(){ return async (req,res) =>{
     const object = unassigned ? 'vw_UnassignedAssets':'Asset'
 
     const sql = `SELECT * FROM ${object} ${
-        _id ? "WHERE _id = " + _id : ""
+        _id ? "WHERE _id = " + _id + "AND Active = 1": "WHERE Active = 1"
     }`;
     try {
         const db = await openConnection();
@@ -19,4 +19,4 @@ exports.get = function(){ return async (req,res) =>{
 }}
 exports.create = coreController.create
 exports.update = coreController.update
-exports.delete = coreController.delete
+exports.delete = coreController.deleteSoft

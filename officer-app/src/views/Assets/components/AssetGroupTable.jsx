@@ -40,10 +40,14 @@ function AssetGroupTable(actionBar) {
   );
   const assetGroupConf = {
     Name: {
-      ControlType: "Text"
+      Name: "Name",
+      ControlType: "Text",
+      Required: true
     },
     Description: {
-      ControlType: "Text"
+      Name: "Description",
+      ControlType: "Text",
+      Required: true
     }
   }
   return (
@@ -51,7 +55,7 @@ function AssetGroupTable(actionBar) {
       {!loading &&
         (
           <>
-            <CoreTable actionBar={actionBar} createFormConf={assetGroupConf} apiService={assetGroupApi} setData={setAssetGroups} data={assetGroups} columns={columns} title={'Asset Groups'}></CoreTable>
+            <CoreTable objectName={"AssetGroup"} actionBar={actionBar} createFormConf={assetGroupConf} apiService={assetGroupApi} setData={setAssetGroups} data={assetGroups} columns={columns} title={'Asset Groups'}></CoreTable>
           </>
         )
       }

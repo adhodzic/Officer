@@ -12,9 +12,8 @@ async function createSignablePDF(
     signers,
     assetAgreement
 ) {
-    const tokenObj = new DSToken();
+    const tokenObj = DSToken.instance();
     const token = await tokenObj.getToken();
-    console.log("Signers: ",signers)
     const dsApiClient = new docusign.ApiClient();
     dsApiClient.setBasePath(dsConfig.dsApiBasePath);
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + token);
@@ -42,7 +41,7 @@ async function makeRecipientViewRequest(
     envelopeId
 ) {
     if (!envelopesApi) {
-        const tokenObj = new DSToken();
+        const tokenObj = DSToken.instance();
         const token = await tokenObj.getToken();
 
         const dsApiClient = new docusign.ApiClient();
@@ -60,8 +59,6 @@ async function makeRecipientViewRequest(
         viewRequest.email = currentUser.Email;
         viewRequest.userName = currentUser.FullName;
         viewRequest.clientUserId = currentUser._id;
-        console.log("CurrentUser: ",currentUser)
-        console.log("ViewRequest: ",viewRequest)
         results = await envelopesApi.createRecipientView(
             dsConfig.accountId,
             envelopeId,
@@ -69,7 +66,7 @@ async function makeRecipientViewRequest(
         );
         return results;
     }catch(err){
-        console.log("Something went wrong")
+        console.log(err,"Something went wrong")
         return null;
     }
 
@@ -96,7 +93,6 @@ function makeEnvelope(pdfPath, signers, assetAgreement) {
     env.documents = [doc1];
 
     const signersObjArr = getSigners(signers);
-    console.log("SignersObj: ",signersObjArr);
     // Add the recipient to the envelope object
     let recipients = docusign.Recipients.constructFromObject({
         signers: signersObjArr,
@@ -111,9 +107,8 @@ function makeEnvelope(pdfPath, signers, assetAgreement) {
 }
 
 async function getEnvelope(envelopesApi, envelopeId) {
-    console.log(envelopeId);
         if (!envelopesApi) {
-            const tokenObj = new DSToken();
+            const tokenObj = DSToken.instance();
             const token = await tokenObj.getToken();
     
             const dsApiClient = new docusign.ApiClient();
@@ -125,15 +120,13 @@ async function getEnvelope(envelopesApi, envelopeId) {
         return await envelopesApi.getEnvelope(dsConfig.accountId, envelopeId);
 }
 async function getEnvelopesForUser(envelopeIds) {
-    const tokenObj = new DSToken();
-    const token = await tokenObj.getToken();
-
+    const tokenObj = DSToken.instance();
+    const token = await tokenObj.getToken();    
     const dsApiClient = new docusign.ApiClient();
     dsApiClient.setBasePath(dsConfig.dsApiBasePath);
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + token);
     envelopesApi = new docusign.EnvelopesApi(dsApiClient);
-    const options = {envelopeIds}
-
+    const options = {envelopeIds, include: 'recipients'}
     const envelopes = await envelopesApi.listStatusChanges(dsConfig.accountId, options);
     return envelopes
 }

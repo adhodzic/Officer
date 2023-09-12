@@ -45,7 +45,6 @@ exports.getReviewers = function () {
         const isReviewer = notAssigned == 'true'?'0':'1'
         const reviewersStmt = "SELECT _id, FullName, Email, Position FROM vw_UserRole WHERE IsReviewer = ?"
         try {
-            console.log(isReviewer,typeof(notAssigned))
             const db = await openConnection();
             const reviewers = await db.all(reviewersStmt, [isReviewer]);
             db.close();
@@ -67,12 +66,10 @@ exports.update = function () {
         let sql = `UPDATE User SET ${fields.join(
             ", "
         )} WHERE User._id = ${_id}`;
-        console.log(sql);
         try {
             const db = await openConnection();
             const rows = await db.run(sql, []);
             db.close();
-            console.log(rows);
             return res.status(200).json(rows);
         } catch (err) {
             console.log(err);
@@ -85,7 +82,6 @@ exports.updateReviewers = function () {
         const { userIds, isReviewer } = req.body;
         const updateReviewerStmt = "UPDATE User SET IsReviewer = ? WHERE _id IN (?)"
         try {
-            console.log(isReviewer, userIds)
             const db = await openConnection();
             await db.run(updateReviewerStmt, [isReviewer,userIds]);
             db.close();

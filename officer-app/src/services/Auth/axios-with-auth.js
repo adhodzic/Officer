@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { showToast } from '../../views/ApplicationSettings/Components/ToastUtils';
 function getToken(){
-    return JSON.parse(localStorage.getItem('token'))
+    return JSON.parse(sessionStorage.getItem('token'))
 }
 const instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL + '/api',
@@ -11,8 +11,8 @@ instance.interceptors.request.use(function (config) {
     let token = getToken()
     if(!token){
       console.log("Token is unavaliable or invalid");
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
       window.location.href = window.location.origin + '/login'
     }
     config.headers.Authorization = `Bearer ${token}`
@@ -25,8 +25,8 @@ instance.interceptors.request.use(function (config) {
     return response;
   }, function (error) {
     if(error.response?.status == 401){
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
       window.location.href = window.location.origin + '/login'
     }else if(error.response?.status == 400){
       showToast(error.response.data,{type: "error"})

@@ -6,7 +6,7 @@ function AssetAgreementView() {
     return (
         <div className='AssetAgreementView'>
             <div className='user-agreement-table'>
-                <AssetAgreementTable></AssetAgreementTable>
+                <AssetAgreementTable hasCheckbox={false} actionBar={false}></AssetAgreementTable>
             </div>
         </div>
     )

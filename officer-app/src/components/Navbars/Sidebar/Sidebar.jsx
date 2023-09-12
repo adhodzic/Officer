@@ -6,7 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../../hooks/Auth/UserContext";
 function Sidebar({ collapseState, setCollapseState }) {
-    const { logout, validatePrivilages } = useContext(UserContext)
+    const { logout, hasPrivilages } = useContext(UserContext)
     const navigate = useNavigate()
     return (
         <div className={`Sidebar ${collapseState ? 'collapsed' : ''}`}>
@@ -21,7 +21,7 @@ function Sidebar({ collapseState, setCollapseState }) {
                 <div className="Sidebar-body">
                     <UserCard collapseState={collapseState}></UserCard>
                     <div className="Sidebar-list">
-                        {validatePrivilages(["MANAGER","ADMIN"]) && <NavLink to={'/dashboard'} className="list-item">
+                        {hasPrivilages(["MANAGER","ADMIN"]) && <NavLink to={'/dashboard'} className="list-item">
                             <FontAwesomeIcon className="list-icon" icon={faTableColumns} />
                             <div className="list-name">Dashboard</div>
                         </NavLink>}
@@ -37,15 +37,15 @@ function Sidebar({ collapseState, setCollapseState }) {
                             <FontAwesomeIcon className="list-icon" icon={faListCheck} />
                             <div className="list-name">Requests</div>
                         </NavLink>
-                        <NavLink to={'/employees'} className="list-item">
+                        {hasPrivilages(["MANAGER","ADMIN"]) && <NavLink to={'/employees'} className="list-item">
                             <FontAwesomeIcon className="list-icon" icon={faPeopleGroup} />
                             <div className="list-name">Employees</div>
-                        </NavLink>
+                        </NavLink>}
                     </div>
                 </div>
             </div>
             <div className="Sidebar-footer">
-                <FontAwesomeIcon onClick={()=> navigate('/application-settings')} icon={faGear} />
+                {hasPrivilages(["ADMIN"]) && <FontAwesomeIcon onClick={()=> navigate('/application-settings')} icon={faGear} />}
             </div>
         </div>
     );

@@ -5,7 +5,7 @@ import { NavLink  } from "react-router-dom"
 import BLink from "react-bootstrap/NavLink";
 import AssetAgreementApi from '../../../services/asset-agreement-api'
 import loader from '../../../assets/loader.svg'
-function AssetAgreementTable({actionBar, details, status, title = 'Asset Agreements'}) {
+function AssetAgreementTable({hasCheckbox, actionBar, details, transformData, title = 'Asset Agreements'}) {
   const [AssetAgreements, setAssetAgreements] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -13,8 +13,9 @@ function AssetAgreementTable({actionBar, details, status, title = 'Asset Agreeme
   const loadData = async function () {
     try {
       setLoading(true)
-      const apiData = await AssetAgreementApi.get(null, status);
-      setAssetAgreements(apiData);
+      const apiData = await AssetAgreementApi.get();
+      const transformedData = transformData ? transformData(apiData) : apiData;
+      setAssetAgreements(transformedData);
     } catch (error) {
       console.log(error)
       setAssetAgreements([]);
@@ -34,6 +35,10 @@ function AssetAgreementTable({actionBar, details, status, title = 'Asset Agreeme
         Cell: props => <BLink as={NavLink} to={`/asset-agreements/details/${props.row.original._id}`}>{props.value}</BLink>
       },
       {
+        Header: "Employee",
+        accessor: "FullName"
+      },
+      {
         Header: "Reason",
         accessor: "Reason"
       },
@@ -46,10 +51,12 @@ function AssetAgreementTable({actionBar, details, status, title = 'Asset Agreeme
   );
   const AssetAgreementConf = {
     Name: {
+      Name: 'Name',
       ControlType: "Text",
       Required: true
     },
     Reason: {
+      Name: 'Reason',
       ControlType: "Text",
       Required: true
     }
@@ -60,7 +67,7 @@ function AssetAgreementTable({actionBar, details, status, title = 'Asset Agreeme
       {!loading && AssetAgreements !== null &&
         (
           <>
-            <CoreTable actionBar={actionBar} details={details} createFormConf={AssetAgreementConf} apiService={AssetAgreementApi} setData={setAssetAgreements} data={AssetAgreements} columns={columns}></CoreTable>
+            <CoreTable hasCheckbox={hasCheckbox} objectName={"AssetAgreement"} actionBar={actionBar} details={details} createFormConf={AssetAgreementConf} apiService={AssetAgreementApi} setData={setAssetAgreements} data={AssetAgreements} columns={columns}></CoreTable>
           </>
         ) ||
         <div className="loader">

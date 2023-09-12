@@ -14,20 +14,17 @@ function AssetAgreementDetails() {
     const [assets, setAssets] = useState();
     const [docStatus, setDocStatus] = useState();
     async function generateDoc() {
-        console.log(p.id)
         await assetAgreementApi.pdf(p.id)
     }
     async function signDoc() {
         const data = await assetAgreementApi.signPdf(p.id)
         window.open(data.url,"_self")
-        console.log(data)
     }
     async function loadData() {
         setIsLoading(true)
-        const data = await assetAgreementApi.get(p.id);
+        const data = await assetAgreementApi.getDetails(p.id);
         data.assetAgreement.Reviewers = JSON.parse(data.assetAgreement.Reviewers);
         setGeneralInfo(data.assetAgreement)
-        console.log(data.assetAgreement)
         setDocStatus(data.envelope?.status || "Unavailable")
         setIsLoading(false)
     }

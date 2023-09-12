@@ -31,7 +31,6 @@ exports.createToken = function (user){
 
 exports.compareAndCreateToken = async function (userData,password, storedPassword){
     if(!password || !storedPassword) throw new HttpError('Both passwords must be provided',401)
-    console.log(password, storedPassword)
     const res = await bcrypt.compare(password, storedPassword)
     if(!res) throw new HttpError("Email and/or password is invalid",401);
     return exports.createToken(userData);

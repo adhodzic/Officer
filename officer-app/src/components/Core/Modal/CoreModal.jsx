@@ -22,11 +22,13 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
             return await Promise.all(Object.entries(modalProp).map(async (e) => {
                 let options = e[1].DataSource && await getOptionsFromDataSource(e[1].DataSource)
                 return {
-                    Name: e[0],
+                    RealName: e[0],
+                    Name: e[1].Name,
                     Value: isInEdit ? data[e[0]] : "",
                     ControlType: e[1].ControlType,
                     Options: e[1].Options ? e[1].Options : options,
-                    Required: e[1].Required
+                    Required: e[1].Required,
+                    Validate: e[1].Validate
                 }
             }));
         }
@@ -71,9 +73,10 @@ function CoreModal({ handleClose, show, isInEdit, modalProp, apiService, rowData
     const submitData = async function (event) {
         event.preventDefault();
         try{
+            fieldData.some((field)=> {return field.Validate && typeof field.Validate == "function" ? !field.Validate() : false})
             setIsSubmiting(true);
             let data = fieldData.reduce(
-                (obj, item) => Object.assign(obj, { [item.Name]: item.Value }), {})
+                (obj, item) => Object.assign(obj, { [item.RealName]: item.Value }), {})
             isInEdit ? await apiService.update({ ...data, _id: rowData._id }) : await apiService.create(data, parentId)
             handleClose(true);
         }catch(error){

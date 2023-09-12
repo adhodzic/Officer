@@ -35,13 +35,8 @@ exports.assetAgreement = function(user, company, agreement, assets, reviewers, t
             <br><br><br><br>
             <div style="margin-left:10px;">
             ${reviewers.map((reviewer)=>{
-                return(
-                    `<div style="margin-bottom:48px; width: 148px;">
-                        <hr>
-                        <p style="margin:0;"><b>${reviewer.FullName}</b></p>
-                        <p style="color:grey;font-size:10px;margin:0;">${reviewer.Position}</p></div>`
-                )
-            })}
+                return `<div style="margin-bottom:48px; width: 148px;"><hr><p style="margin:0;"><b>${reviewer.FullName}</b></p><p style="color:grey;font-size:10px;margin:0;">${reviewer.Position}</p></div>`
+            }).join("\n")}
             </div>            
         </div>
         ${footer(foot)}

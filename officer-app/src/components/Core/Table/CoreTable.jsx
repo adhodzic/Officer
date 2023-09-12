@@ -1,4 +1,4 @@
-import { forwardRef, useState, useRef, useEffect } from "react";
+import { forwardRef, useState, useRef, useEffect, useContext } from "react";
 import { useTable, useRowSelect, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Modal, Nav } from "react-bootstrap";
@@ -7,8 +7,10 @@ import './CoreTable.scss'
 import PaginationCore from "./PaginationCore";
 import CoreTableTools from "./CoreTableTools";
 import CoreModal from "../Modal/CoreModal";
+import { UserContext } from "../../../hooks/Auth/UserContext";
 
-function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
+function CoreTable({objectName,hasCheckbox = true, setSelRows,selRows, actionBar, setData, data, columns, title, createFormConf, createFunc, apiService }) {
+    
     const IndeterminateCheckbox = forwardRef(
         ({ indeterminate, ...rest }, ref) => {
             const defaultRef = useRef();
@@ -25,11 +27,11 @@ function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title
             );
         }
     );
-
     const [initSelectedRows, setInitSelectedRows] = useState({});
+    const {hasActionPrivilagesForObject} = useContext(UserContext);
     //Set preselected rows
     useEffect(()=>{
-        if(!selRows) return
+        if(!hasCheckbox || !selRows) return
         const initArr = selRows.map((row)=>{
             return [row.id, true]
         })
@@ -66,7 +68,7 @@ function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title
         usePagination,
         useRowSelect,
         (hooks) => {
-            hooks.visibleColumns.push((columns) => [
+            hasCheckbox && hooks.visibleColumns.push((columns) => [
                 // Let's make a column for selection
                 {
                     id: "selection",
@@ -103,8 +105,12 @@ function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title
     })
 
     useEffect(()=>{
-        if(setSelRows) setSelRows(selectedFlatRows)
-    },[selectedFlatRows])
+        if(hasCheckbox){
+            if(setSelRows) setSelRows(selectedFlatRows)
+        }else{
+            if (setSelRows && selectedRow.id != -1) setSelRows(selectedRow)
+        }
+    },[selectedFlatRows,selectedRow])
 
     const handleClose = (dataChanged) => {
         typeof (dataChanged) == 'boolean' && dataChanged && setData(null)
@@ -138,7 +144,7 @@ function CoreTable({setSelRows,selRows, actionBar, setData, data, columns, title
             <div className="table-title">
                 <h3>{title}</h3>
             </div>
-            {actionBar && <CoreTableTools create={handleShow} remove={handleShowDeleteWarning}></CoreTableTools>}
+            {actionBar && <CoreTableTools crudPrivilages={hasActionPrivilagesForObject(objectName)} create={handleShow} remove={handleShowDeleteWarning}></CoreTableTools>}
             <div className="table-wrap">
                 <BTable hover size="sm" {...getTableProps()}>
                     <thead>

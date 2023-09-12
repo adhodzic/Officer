@@ -10,7 +10,6 @@ router.route("/login")
 
 router.route("/dsauth")
     .get((req,res)=>{
-        console.log(req.body)
         res.send("OK")
     })
     

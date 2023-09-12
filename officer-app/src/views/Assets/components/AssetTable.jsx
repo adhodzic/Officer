@@ -51,21 +51,26 @@ function AssetTable({setSelectedAssets, selectedAssets, unassigned, actionBar}) 
   );
   const assetConf = {
     Name: {
-        ControlType: "Text",
-        Required: true
+      Name: 'Name',
+      ControlType: "Text",
+      Required: true
     },
     Label: {
-        ControlType: "Text",
-        Required: true
+      Name: 'Label',
+      ControlType: "Text",
+      Required: true
     },
     PurchaseDate: {
-        ControlType: "Date",
-        Required: true
+      Name: 'Purchase Date',
+      ControlType: "Date",
+      Required: true
     },
     Description: {
-        ControlType: "Text"
+      Name: 'Description',
+      ControlType: "Text"
     },
     AssetGroupId: {
+      Name: 'Asset Group',
       ControlType: "Select",
       DataSource: assetGroupApi,
       Required: true
@@ -76,7 +81,7 @@ function AssetTable({setSelectedAssets, selectedAssets, unassigned, actionBar}) 
       {!loading && assets != null &&
       (
       <>
-      <CoreTable actionBar={actionBar} setSelRows={setSelectedAssets} selRows={selectedAssets} createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets} columns={columns} title={'Assets'}></CoreTable>
+      <CoreTable objectName={"Asset"} actionBar={actionBar} setSelRows={setSelectedAssets} selRows={selectedAssets} createFormConf={assetConf} apiService={assetApi} setData={setAssets} data={assets} columns={columns} title={'Assets'}></CoreTable>
       </>
       )
     }

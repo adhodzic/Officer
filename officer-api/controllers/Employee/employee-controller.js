@@ -13,7 +13,6 @@ exports.get = coreController.get
 exports.create = function (object) {
     return async (req, res) => {
         const {userData, ...data} = req.body
-        console.log(data)
 
         let fields = Object.entries(data)
             .map((field) => {
@@ -43,4 +42,4 @@ exports.create = function (object) {
     };
 };
 exports.update = coreController.update
-exports.delete = coreController.delete
+exports.delete = coreController.deleteSoft

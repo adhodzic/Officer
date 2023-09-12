@@ -32,7 +32,16 @@
         color: rgba($color: hsl(207, 25%, 20%), $alpha: 1);
     }
 }
-
+.nav-link{
+    border-radius: 2rem;
+    padding: 2px 1rem;
+    border: dotted 1px;
+    border-color: #000;
+}
+.nav-link:hover{
+    background-color: #ffc107;
+    animation: 1s;
+}
 .items-per-pages{
     display: flex;
     align-items: center;

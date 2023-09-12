@@ -19,7 +19,6 @@ module.exports = function verifyUser(object) {
                 throw new HttpError("Invalid token", 401);
             }
             req.body.userData = user;
-            console.log(user)
             const isAuthorized = await authorize(
                 user.RoleId,
                 req.method,

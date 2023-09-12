@@ -1,8 +1,14 @@
 import axios from './Auth/axios-with-auth'
 
-const get = async function(id, status){
-    const url = id? `/asset-agreement/details/${id}`:'/asset-agreement'
-    const res = await axios.get(url,{params:{status:true}})
+const get = async function(){
+    const url = '/asset-agreement'
+    const res = await axios.get(url)
+    return res.data
+}
+
+const getDetails = async function(id){
+    const url = `/asset-agreement/details/${id}`
+    const res = await axios.get(url)
     return res.data
 }
 
@@ -42,6 +48,7 @@ const signPdf = async function(id){
 
 export default {
     get,
+    getDetails,
     create,
     remove,
     pdf,

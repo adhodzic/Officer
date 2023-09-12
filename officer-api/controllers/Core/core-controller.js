@@ -3,7 +3,6 @@ const openConnection = require("../../services/database");
 exports.create = function (object) {
     return async (req, res) => {
         const {userData, ...data} = req.body
-        console.log(data)
 
         let fields = Object.entries(data)
             .map((field) => {
@@ -58,12 +57,10 @@ exports.update = function (object) {
         let sql = `UPDATE ${object} SET ${fields.join(
             ", "
         )} WHERE ${object}._id = ${_id}`;
-        console.log(sql);
         try {
             const db = await openConnection();
             const rows = await db.run(sql, []);
             db.close();
-            console.log(rows);
             return res.status(200).json(rows);
         } catch (err) {
             console.log(err);

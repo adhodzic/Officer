@@ -17,8 +17,8 @@ const UserProvider = ({ children }) => {
   var navigate = useNavigate();
   const [user, setUser] = useState(-1);
   const [token, setToken] = useState(null);
-  const rawUser = localStorage.getItem('user');
-  const rawToken = localStorage.getItem('token');
+  const rawUser = sessionStorage.getItem('user');
+  const rawToken = sessionStorage.getItem('token');
   useEffect(() => {
     if (!isValidJSON(rawUser) || !isValidJSON(rawToken)){
       clearUserAndToken();
@@ -31,31 +31,41 @@ const UserProvider = ({ children }) => {
   }, [])
 
   function login(data) {
-    localStorage.setItem('token', JSON.stringify(data.Token))
-    localStorage.setItem('user', JSON.stringify(data.User))
+    sessionStorage.setItem('token', JSON.stringify(data.Token))
+    sessionStorage.setItem('user', JSON.stringify(data.User))
     setUser(data.User)
   }
 
   function logout() {
     clearUserAndToken()
+    navigate('/login');
   }
 
-  function validatePrivilages(privilages){
-    if(user != -1){
-      console.log(user)
+  function hasActionPrivilagesForObject(objectName){
+    if(user != null && user != -1){
+      const jsonPrivilages = JSON.parse(user.Privilages)
+      const privilagesForObject = jsonPrivilages.filter((obj)=>{return obj.Object == objectName})
+      const actionPrivilages = privilagesForObject.map((ap)=> ap.Act)
+      return actionPrivilages
+    }
+    return []
+  }
+
+  function hasPrivilages(privilages){
+    if(user != null && user != -1){
       return privilages.some((p)=>p.toLowerCase() == user.RoleName.toLowerCase())
     }
     return false
   }
 
   function clearUserAndToken() {
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
+    sessionStorage.removeItem('user')
+    sessionStorage.removeItem('token')
     setUser(null)
     setToken(null)
   }
   return (
-    <UserContext.Provider value={{ user, login, logout, validatePrivilages }}>
+    <UserContext.Provider value={{ user, login, logout, hasPrivilages, hasActionPrivilagesForObject }}>
       {children}
     </UserContext.Provider>
   );
