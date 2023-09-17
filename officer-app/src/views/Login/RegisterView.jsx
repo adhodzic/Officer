@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import {Form, Button} from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import {Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../hooks/Auth/UserContext'
 import auth from '../../services/Auth/auth-api'
 import './AuthForms.scss'
@@ -19,6 +19,10 @@ function RegisterView() {
     }
     return (
         <div className="Register">
+            <h1>Welcome to Officer</h1>
+            <br/>
+            <h3>Register</h3>
+            <br/>
             <Form>
                 <Form.Group className="mb-3" controlId="email">
                     <Form.Label>Company email</Form.Label>
@@ -47,6 +51,7 @@ function RegisterView() {
                     Register
                 </Button>
             </Form>
+            <Link to={'/login'}>Login</Link>
         </div>
     )
 }

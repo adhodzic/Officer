@@ -68,7 +68,7 @@ function AssetAgreementDetails() {
                                 </div>
                                 <div className='row'>
                                     <FormGroup>
-                                        <Form.Label>User agreement</Form.Label>
+                                        <Form.Label>Asset Agreement Name</Form.Label>
                                         <Form.Control value={generalInfo.Name} type="text" disabled></Form.Control>
                                     </FormGroup>
                                 </div>
@@ -99,7 +99,9 @@ function AssetAgreementDetails() {
                             </div>
                         </div>
                     </Form>
+                    <br/>
                     {<Button type='button' onClick={() => generateDoc()}>Download document</Button>}
+                    &nbsp;
                     {docStatus != "Unavailable" && <Button type='button' onClick={() => signDoc()}>E-sign document</Button>}
                 </>
             )

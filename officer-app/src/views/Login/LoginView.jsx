@@ -25,6 +25,10 @@ function LoginView() {
     },[user,privilages])
     return (
         <div className="Login">
+            <h1>Welcome to Officer</h1>
+            <br/>
+            <h3>Login</h3>
+            <br/>
             <Form onSubmit={loginUser}>
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>

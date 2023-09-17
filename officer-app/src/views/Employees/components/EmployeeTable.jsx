@@ -32,8 +32,8 @@ function EmployeeTable({hasCheckbox, selectedEmployee, setSelectedEmployee, acti
         accessor: "FullName",
       },
       {
-        Header: "Position",
-        accessor: "Position",
+        Header: "Activation Code",
+        accessor: "ActivationCode",
       },
       {
         Header: "Date of birth",
